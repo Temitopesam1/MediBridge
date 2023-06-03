@@ -10,6 +10,7 @@ const providerSchema = new Schema({
     'license number': {type: String, required: true, unique: true},
     'specialization': {type: String, required: true},
     'practice address': {type: String, required},
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model('provider', providerSchema);
+const provider = mongoose.model('provider', providerSchema);
+export default provider;

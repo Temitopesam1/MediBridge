@@ -8,6 +8,7 @@ const recipientSchema = new Schema({
     'home address': {type: String, required},
     'phone number': {Number, required: true, unique: true},
     'email': {type: String, required: true, unique: true}
-})
+}, { timestamps: true })
 
-module.exports = mongoose.model('recipient', recipientSchema);
+const recipient = mongoose.model('recipient', recipientSchema);
+export default recipient;

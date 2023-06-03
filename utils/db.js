@@ -1,33 +1,28 @@
-const mongoose = require('mongoose');
+require('dotenv').config();
+import mongoose from "mongoose";
 
-class DBClient {
-    constructor(){
-        this.connectDB();
-    }
-    async connectDB() {
-        const uri = process.env.DATABASE_URI;
-        const database = process.env.DATABASE;
-        await mongoose.connect(`${uri}/${database}`, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        })
-        .then(() => {
-            console.log(`MongoDB Connected: ${connect.connection.host}`);
-        })
-        .catch((err) => {
-            console.log(`Database Connection Error: ${err}`);
-        });
+class DBClients {
+  constructor() {
+    this.dbURI = process.env.DATABASE_URI || 'mongodb://localhost:27017';
+    this._connectDB();
     }
 
-    isAlive(){
-        const status = mongoose.connection.readyState;
-        if(status === 1){
-            return true;
-        } else {
-            return false;
-        }
+  async _connectDB() {
+    mongoose.connect(this.dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+      .catch((error) => {
+        console.error('Error connecting to MongoDB:', error);
+    });
+  }
+
+  async isAlive() {
+    await this._connectDB()
+    const status = mongoose.connection.readyState;
+    if (status === 1) {
+        return true;
     }
+    return false;
+  }
 }
 
-const dbClient = DBClient();
-module.exports = dbClient;
+const dbClient = new DBClients();
+export default dbClient;
