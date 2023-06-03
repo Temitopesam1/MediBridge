@@ -1,28 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose")
 
-async function connectDB(){
-    const uri = process.env.URL;
-    const database = process.env.DATABASE;
-    await mongoose.connect(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-    .then(() => {
-        console.log(`MongoDB Connected: ${connect.connection.host}`);
-    })
-    .catch((err) => {
-        console.log(`Database Connection Error: ${err}`);
-    });
-}
-    
-
-function isAlive(){
-    const status = mongoose.connection.readyState;
-    if(status === 1){
-        return true;
-    } else {
-        return false;
+export default async function connectDB(){
+    try {
+        const conn = await mongoose.connect(process.env.URL, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+        console.log(`MongoDB Connected: ${conn.connection.host}`)
+    } catch(err) {
+        console.error(err)
+        process.exit(1)
     }
 }
-
-module.exports = { connectDB, isAlive };
