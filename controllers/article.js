@@ -32,7 +32,7 @@ class ArticleController {
     }
     
     async deleteArticle(req, res){
-        Article.remove({_id: req.params.id});
+        await Article.deleteOne({_id: req.params.id});
         res.status(200).send('deleted');
     }
 }

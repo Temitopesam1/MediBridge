@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import articleController from '../controllers/article';
-import {isAlive} from '../utils/db';
 
 const router = Router();
 
