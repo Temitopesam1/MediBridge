@@ -1,54 +1,156 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>My First Node App</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-  <script src="/socket.io/socket.io.js"></script>
-</head>
-<body>
-<div class="container">
-    <br>
-    <div class="jumbotron">
-        <h1 class="display-4">Send Message</h1>
-        <br>
-        <input id = "name" class="form-control" placeholder="Name">
-        <br>
-        <textarea id = "message" class="form-control" placeholder="Your Message Here"></textarea>
-        <br>
-        <button id="send" class="btn btn-success">Send</button>
-    </div>
-    <div id="messages">
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
-    </div>
-</div>
-<script>
-   var socket = io();
-    $(() => {
-        $("#send").click(()=>{
-            sendMessage({name: $("#name").val(), message: $("#message").val()});
-        })
+      #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+      #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+      #input:focus { outline: none; }
+      #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
 
-        getMessages()
-    })
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages > li { padding: 0.5rem 1rem; }
+      #messages > li:nth-child(odd) { background: #efefef; }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <div id="online-users-container"></div>
+    <header id="private-message-header"></header>
+    <!-- <form id="private-message-form" action="">
+      <input id="recipient-id" autocomplete="off" />
+      <input id="private-message-input" autocomplete="on" /><button>Send</button>
+    </form> -->
+    <form id="form" action="">
+      <input id="input" autocomplete="on" /><button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
 
-    socket.on('message', addMessages)
+    <script>
+      var socket = io();
 
-    function addMessages(message){
-        $("#messages").append(`<h4> ${message.name} </h4> <p> ${message.message} </p>`)
-    }
+      // Prompt the user to set their nickname
+      const nickname = prompt('Enter your nickname:');
 
-    function getMessages(){
-      $.get('http://localhost:3000/messages', (data) => {
-        data.forEach(addMessages);
-      })
-    }
+      // Send the nickname to the server
+      socket.emit('setNickname', nickname);
 
-    function sendMessage(message){
-      $.post('http://localhost:3000/messages', message)
-    }
-</script>
-</body>
+      const messages = document.getElementById('messages');
+      const form = document.getElementById('form');
+      const input = document.getElementById('input');
+      const onlineUsersContainer = document.getElementById('online-users-container');
+      const privateMessageForm = document.getElementById('private-message-form');
+
+      let typing = false;
+      let timeout = null;
+
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        if (input.value) {
+          socket.emit('sendMessage', input.value);
+          input.value = '';
+        }
+      });
+      
+      socket.on('messageReceived', (data) => {
+        const { userId, nickname, message } = data;
+        const isOwnMessage = userId === socket.id;
+        const messageElement = document.createElement('li');
+        messageElement.classList.add('message');
+        if (isOwnMessage) {
+          messageElement.classList.add('own-message');
+        }
+        messageElement.innerHTML = isOwnMessage
+          ? `<span class="message-sender">You:</span> ${message}`
+          : `<span class="message-sender">${nickname}:</span> ${message}`;
+        messages.appendChild(messageElement);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+
+      
+
+
+      form.addEventListener('input', function(e){
+        if (!typing) {
+          typing = true;
+          socket.emit('startTyping');
+        }
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          typing = false;
+          socket.emit('stopTyping');
+        }, 2000);
+      });
+
+      // privateMessageForm.addEventListener('submit', function(e){
+      //   e.preventDefault();
+      //   const recipientId = document.getElementById('recipient-id').value;
+      //   const message = document.getElementById('private-message-input').value.trim();
+      //   if (message !== '') {
+      //     socket.emit('sendMessage', {
+      //       recipientId: recipientId,
+      //       message: message,
+      //     });
+      //     document.getElementById('private-message-input').value = '';
+      //     appendPrivateMessage('You', message);
+      //   }
+      // });
+
+      // socket.on('privateMessageReceived', (data) => {
+      //   const { senderId, senderNickname, message } = data;
+      //   appendPrivateMessage(senderNickname, message);
+      // });
+
+      // function appendPrivateMessage(sender, message) {
+      //   const messageElement = document.createElement('div');
+      //   messageElement.classList.add('message');
+      //   messageElement.innerHTML = `<span class="message-sender">${sender}:</span> ${message}`;
+      //   messages.appendChild(messageElement);
+      //   messages.scrollTop = messages.scrollHeight;
+      // }
+
+      // function openPrivateChat(recipientId, recipientNickname) {
+      //   document.getElementById('private-message-header').innerText = `Private Chat with ${recipientNickname}`;
+      //   document.getElementById('recipient-id').value = recipientId;
+      //   messages.innerHTML = '';
+      // }
+
+
+      socket.on('userTyping', (nickname) => {
+        if (nickname) {
+          // Update UI to show user is typing
+          console.log(`${nickname} is typing...`);
+        } else {
+          // Update UI to hide typing status
+          console.log('No one is typing.');
+        }
+      });
+
+      socket.on('userConnected', (data) => {
+        // Handle user connected event
+        const { userId, nickname } = data;
+        console.log(`User ${nickname} (${userId}) connected.`);
+      });
+
+      socket.on('userDisconnected', (data) => {
+        // Handle user disconnected event
+        const { userId, nickname } = data;
+        console.log(`User ${nickname} (${userId}) disconnected.`);
+      });
+      socket.on('onlineUsers', (users) => {
+        // onlineUsersContainer.innerHTML = '';
+        users.forEach((user) => {
+          const userElement = document.createElement('div');
+          userElement.innerText = user.nickname;
+          userElement.addEventListener('click', () => {
+            openPrivateChat(user.userId, user.nickname);
+          });
+          onlineUsersContainer.appendChild(userElement);
+        });
+      });
+    </script>
+  </body>
 </html>
