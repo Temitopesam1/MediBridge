@@ -1,24 +1,26 @@
 require('dotenv').config();
-import { exit } from 'process';
 import indexRoutes from './routes/index';
-import dbClient from './utils/db';
+import mongoose from "mongoose";
 
 const express = require('express');
 const bodyparser = require('body-parser');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const dbURI = process.env.DATABASE_URI || 'mongodb://localhost:27017';
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended: false}));
 app.use(indexRoutes);
 
-if (dbClient.isAlive()) {
-    console.log('Connection to Db successful:', dbClient.dbURI);
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('Connection to Db successful:', dbURI);
     app.listen(port, () => {
         console.log(`listening on http://localhost:${port}`);
     });
-} else {
-    console.log('Database is not connected, cannot listen');
-    exit();
-}
+  })
+  .catch((error) => {
+    console.error('Error connecting to Database:', error);
+    process.exit();
+});
