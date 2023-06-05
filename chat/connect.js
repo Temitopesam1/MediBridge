@@ -1,3 +1,6 @@
+import { open, close, write } from 'fs';
+const fs = require('fs');
+const { join } = require('path');
 const connectedUsers = {};
 const typingUsers = {};
 
@@ -31,6 +34,19 @@ function handleConnection(socket){
             });
             // Clear typing status after sending the message
             clearTypingStatus(socket);
+        }
+    });
+    socket.on('sendImage', (data) => {
+        const { fileName, imageData } = data;
+        const user = connectedUsers[socket.id];
+    
+        if (user) {
+            socket.broadcast.emit('imageReceived', {
+                userId: socket.id,
+                nickname: user.nickname,
+                fileName: fileName,
+                imageData: imageData,
+            });
         }
     });
     // socket.on('sendMessage', (data) =>{

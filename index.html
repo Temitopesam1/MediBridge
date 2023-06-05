@@ -23,6 +23,7 @@
       <input id="recipient-id" autocomplete="off" />
       <input id="private-message-input" autocomplete="on" /><button>Send</button>
     </form> -->
+    <input type="file" id="image-input" accept="image/*"/>
     <form id="form" action="">
       <input id="input" autocomplete="on" /><button>Send</button>
     </form>
@@ -40,11 +41,45 @@
       const messages = document.getElementById('messages');
       const form = document.getElementById('form');
       const input = document.getElementById('input');
+      const imageInput = document.getElementById('image-input');
       const onlineUsersContainer = document.getElementById('online-users-container');
       const privateMessageForm = document.getElementById('private-message-form');
 
-      let typing = false;
-      let timeout = null;
+
+      
+      imageInput.addEventListener('change', (e) =>{
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const imageData = e.target.result;
+          const fileName = file.name;
+          socket.emit('sendImage', {
+            imageData: imageData,
+            fileName: fileName,
+          });
+          appendImage('You', imageData);
+        };
+        reader.readAsDataURL(file);
+        imageInput.value = '';
+      });
+
+
+
+      socket.on('imageReceived', (data) => {
+        const { nickname, imageData } = data;
+        appendImage(nickname, imageData);
+      });
+
+
+      function appendImage(sender, imageData) {
+        const imageElement = document.createElement('div');
+        imageElement.classList.add('image');
+        imageElement.innerHTML = `<span class="image-sender">${sender}:</span> <img src="${imageData}" />`;
+        messages.appendChild(imageElement);
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+
 
 
       form.addEventListener('submit', function(e){
@@ -70,20 +105,36 @@
         window.scrollTo(0, document.body.scrollHeight);
       });
 
-      
+      // imageInput.addEventListener('change', (event) => {
+      //   const file = event.target.files[0];
+      //   const reader = new FileReader();
+      //   reader.onload = function (e) {
+      //     const imageData = e.target.result;
+      //     const fileName = file.name;
+      //     const recipientId = document.getElementById('recipient-id').value;
+      //     socket.emit('sendImage', {
+      //       recipientId: recipientId,
+      //       imageData: imageData,
+      //       fileName: fileName,
+      //     });
+      //     appendPrivateImage('You', imageData);
+      //   };
+      //   reader.readAsDataURL(file);
+      // });
 
+      // socket.on('privateImageReceived', (data) => {
+      //   const { senderNickname, imageData } = data;
+      //   appendPrivateImage(senderNickname, imageData);
+      // });
 
-      form.addEventListener('input', function(e){
-        if (!typing) {
-          typing = true;
-          socket.emit('startTyping');
-        }
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-          typing = false;
-          socket.emit('stopTyping');
-        }, 2000);
-      });
+      // function appendPrivateImage(sender, imageData) {
+      //   const imageElement = document.createElement('div');
+      //   imageElement.classList.add('image');
+      //   imageElement.innerHTML = `<span class="image-sender">${sender}:</span> <img src="${imageData}" />`;
+      //   messagesContainer.appendChild(imageElement);
+      //   messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      // }
+
 
       // privateMessageForm.addEventListener('submit', function(e){
       //   e.preventDefault();
@@ -119,6 +170,21 @@
       // }
 
 
+      let typing = false;
+      let timeout = null;
+
+      form.addEventListener('input', function(e){
+        if (!typing) {
+          typing = true;
+          socket.emit('startTyping');
+        }
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          typing = false;
+          socket.emit('stopTyping');
+        }, 2000);
+      });
+
       socket.on('userTyping', (nickname) => {
         if (nickname) {
           // Update UI to show user is typing
@@ -141,7 +207,7 @@
         console.log(`User ${nickname} (${userId}) disconnected.`);
       });
       socket.on('onlineUsers', (users) => {
-        // onlineUsersContainer.innerHTML = '';
+        onlineUsersContainer.innerHTML = '';
         users.forEach((user) => {
           const userElement = document.createElement('div');
           userElement.innerText = user.nickname;
