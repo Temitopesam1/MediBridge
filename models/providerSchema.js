@@ -2,15 +2,15 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const providerSchema = new Schema({
-    'name': {type: String, required: true},
-    'phone number': {Number, required: true, unique: true},
-    'email': {type: String, required: true, unique: true},
-    'gender': {type: String, required: true},
-    'home address': {type: String, required: true},
-    'license number': {type: String, required: true, unique: true},
-    'specialization': {type: String, required: true},
-    'practice address': {type: String, required},
+  name: {type: String, required: true},
+  phoneNumber: {type: Number, required: true, unique: true},
+  email: {type: String, required: true, unique: true},
+  gender: {type: String, required: true},
+  homeAddress: {type: String, required: true},
+  licenseNumber: {type: String, required: true, unique: true},
+  specialization: {type: String, required: true},
+  practiceAddress: {type: String, required: true},
 }, { timestamps: true });
 
-const provider = mongoose.model('provider', providerSchema);
-export default provider;
+const Provider = mongoose.model('Provider', providerSchema);
+export default Provider;
