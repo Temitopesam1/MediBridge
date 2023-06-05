@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import recipientController from '../controllers/usersControllers';
+import usersController from '../controllers/usersControllers';
 
 const indexRoute = Router();
-indexRoute.use(recipientController);
+indexRoute.use(usersController);
 
 export default indexRoute;

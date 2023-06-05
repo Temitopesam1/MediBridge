@@ -7,7 +7,7 @@ const bodyparser = require('body-parser');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const dbURI = process.env.DATABASE_URI || 'mongodb://localhost:27017';
+const dbURI = process.env.DATABASE_URI || 'mongodb://localhost:27017/medibridge';
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended: false}));

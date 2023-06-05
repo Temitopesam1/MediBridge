@@ -2,9 +2,9 @@ import { Router } from 'express';
 import Recipient from '../models/recipientSchema';
 import Provider from '../models/providerSchema';
 
-const recipientController = Router();
+const usersController = Router();
 
-recipientController.get('/medibridge/users/recipients', async (req, res) => {
+usersController.get('/medibridge/users/recipients', async (req, res) => {
   console.log('Getting all recipients');
   await Recipient.find()
     .then((users) => {
@@ -16,7 +16,7 @@ recipientController.get('/medibridge/users/recipients', async (req, res) => {
     })
 });
 
-recipientController.get('/medibridge/users/providers', async (req, res) => {
+usersController.get('/medibridge/users/providers', async (req, res) => {
   console.log('Getting all providers');
   await Provider.find()
     .then((providers) => {
@@ -28,10 +28,78 @@ recipientController.get('/medibridge/users/providers', async (req, res) => {
     })
 });
 
-recipientController.post('/medibridge/users/recipients', async (req, res) => {
+usersController.post('/medibridge/users/recipients', async (req, res) => {
   const { name, age, gender, address, phoneNumber, email } = req.body;
-  const user = new Recipient
+  const user = new Recipient({
+    name,
+    age,
+    gender,
+    address,
+    phoneNumber,
+    email,
+    isSmoking,
+    isHypertensive,
+    isDiabetic
+  });
+  await user.save()
+    .then((result) => {
+      console.log('Saved new recipient:', result.email);
+      res.status(201).json(result);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json({ error: 'Cannot save user'})
+    })
 });
 
+usersController.post('/medibridge/users/providers', async (req, res) => {
+  const { name, age, gender, address, phoneNumber, email } = req.body;
+  const user = new Provider({
+    name,
+    age,
+    gender,
+    address,
+    phoneNumber,
+    email,
+    licenseNumber,
+    specializationDepartment,
+    practiceAddress
+  });
+  await user.save()
+    .then((result) => {
+      console.log('Saved new provider:', result.email);
+      res.status(201).json(result);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json({ error: 'Cannot save user'})
+    })
+});
 
-export default recipientController;
+usersController.delete('/medibridge/users/recipients', async (req, res) => {
+  const userEmail = req.query.email;
+  await Recipient.findOneAndDelete({ email: userEmail })
+    .then(() => {
+      console.log('Deleted recipient', userEmail);
+      res.status(204).end();
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json({ error: 'Bad Request!'});
+    })
+});
+
+usersController.delete('/medibridge/users/providers', async (req, res) => {
+  const userEmail = req.query.email;
+  await Provider.findOneAndDelete({ email: userEmail })
+    .then(() => {
+      console.log('deleted Provider', userEmail);
+      res.status(204).end();
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json({ error: 'Bad Request!'});
+    })
+});
+
+export default usersController;
