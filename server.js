@@ -15,7 +15,7 @@ app.use(indexRoutes);
 
 app.get('/', (req, res) => {
   console.log('Getting home page');
-  res.status(200).json({ message: 'Welcome to MediBridge! Your Trusted Health companion'});
+  res.status(200).json({ message: 'Welcome to MediBridge, Your Trusted Health companion\'s API' });
 })
 app.use((req, res, next) => {
   console.log('Redirecting to homepage!')
