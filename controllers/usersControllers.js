@@ -17,7 +17,7 @@ usersController.get('/medibridge/users/recipients', async (req, res) => {
       res.status(200).json(users);
     })
     .catch ((err) => {
-      console.log('Error retrieving all recipients', err)
+      console.log(err)
       res.status(500).json({ error: 'Could not get recipients, Our team has been notified!' });
     })
 });
@@ -30,8 +30,8 @@ usersController.get('/medibridge/users/providers', async (req, res) => {
       res.status(200).json(providers);
     })
     .catch((err) => {
-      console.log('Error retrieving all providers', err);
-      res.status(500).json({ error: 'Could not get all providers, Our team has been notified!'});
+      console.log(err);
+      res.status(500).json({ error: 'Could not get providers, Our team has been notified!'});
     })
 });
 
@@ -58,7 +58,7 @@ usersController.post('/medibridge/users/recipients', async (req, res) => {
       })
     .catch((err) => {
       console.log(err);
-      res.status(400).json({ error: 'Cannot save user'})
+      res.status(400).json({ error: 'Could not save user'})
     })
     })
 });
@@ -86,7 +86,7 @@ usersController.post('/medibridge/users/providers', async (req, res) => {
       })
     .catch((err) => {
       console.log(err);
-      res.status(400).json({ error: 'Cannot save user'})
+      res.status(400).json({ error: 'Could not save user'})
     })
     })
 });
@@ -101,9 +101,9 @@ usersController.get('/medibridge/users/recipients/:email', async (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(400).json({ error: "Bad request"});
+      res.status(400).json({ error: 'Could not get user' });
     });
-})
+});
 
 /*route to get a provider with email as a parameter*/
 usersController.get('/medibridge/users/providers/:email', async (req, res) => {
@@ -115,9 +115,67 @@ usersController.get('/medibridge/users/providers/:email', async (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(400).json({ error: "Bad request"});
+      res.status(400).json({ error: 'Could not get user' });
     });
-})
+});
+
+/*route to update user with email as a parameter*/
+usersController.put('/medibridge/users/recipients/:email', async (req, res) => {
+  const userEmail = req.params.email;
+  const { name, age, gender, address, phoneNumber, email, isSmoking, isHypertensive, isDiabetic } = req.body;
+  const user = {
+    name,
+    age,
+    gender,
+    address,
+    phoneNumber,
+    email,
+    isSmoking,
+    isHypertensive,
+    isDiabetic
+  };
+  console.log('Updating recipient');
+  await Recipient.findOneAndUpdate({ email: userEmail }, { user }, { new: true })
+    .then(async (result) => {
+      await Recipient.findOne({ email: email }, recipientsRequriedFields)
+        .then((result) => {
+          console.log('Updated recipient', userEmail);
+          res.status(200).json(result);
+        })
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json({ error: 'Could not update user' })
+    })
+});
+
+usersController.put('/medibridge/users/providers/:email', async (req, res) => {
+  const userEmail = req.params.email;
+  const { name, age, gender, address, phoneNumber, email, specializationDepartment, practiceAddress } = req.body;
+  const user = new Provider({
+    name,
+    age,
+    gender,
+    address,
+    phoneNumber,
+    email,
+    specializationDepartment,
+    practiceAddress
+  });  
+  console.log('Updating provider');
+  await Provider.findOneAndUpdate({ email: userEmail }, { user }, { new: true })
+    .then(async (result) => {
+      await Provider.findOne({ email: email }, providersRequiredFields)
+        .then((result) => {
+          console.log('Updated provider', userEmail);
+          res.status(200).json(result);
+        })
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json({ error: 'Could not update user' })
+    })
+});
 
 /*route to delete a recipient with email as a parameter*/
 usersController.delete('/medibridge/users/recipients/:email', async (req, res) => {
@@ -129,7 +187,7 @@ usersController.delete('/medibridge/users/recipients/:email', async (req, res) =
     })
     .catch((err) => {
       console.log(err);
-      res.status(400).json({ error: 'Bad Request!'});
+      res.status(400).json({ error: 'Could not delete user' });
     })
 });
 
@@ -143,7 +201,7 @@ usersController.delete('/medibridge/users/providers/:email', async (req, res) =>
     })
     .catch((err) => {
       console.log(err);
-      res.status(400).json({ error: 'Bad Request!'});
+      res.status(400).json({ error: 'Could not delete user' });
     })
 });
 
