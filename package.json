@@ -29,8 +29,10 @@
     "dotenv": "^16.1.3",
     "express": "^4.18.2",
     "express-openid-connect": "^2.16.0",
+    "googleapis": "^118.0.0",
     "mongoose": "^7.2.2",
     "mongoose-date-format": "^1.2.0",
+    "node-google-calendar": "^1.1.1",
     "redis": "^4.6.7"
   },
   "devDependencies": {
