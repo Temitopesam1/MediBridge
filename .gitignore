@@ -6,3 +6,13 @@ credentials.json
 thinking-glass-389011-746f56df34f1.json
 credss.json
 index.js
+
+{
+    "patientName": "Samantha",
+    "doctorname": "temitopesam5@gmail.com",
+    "startTime": "2023-06-28T09:00:00-07:00",
+    "endTime": "2023-06-30T09:00:00-07:00",
+    "location": "Lagos, Nigeria",
+    "summary": "Testing calender api",
+    "discription": "This is the umpteenth test and surely not the last"
+}

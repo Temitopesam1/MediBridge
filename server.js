@@ -57,14 +57,14 @@ app.post("/appointment",(req,res)=>{
   var event = {
     'summary': summary,
     'location': location,
-    'description': description || summary,
+    'description': description,
     'start': {
       'dateTime': startTime,
-      'timeZone': 'Africa/Lagos',
+      'timeZone': 'America/Los_Angeles',
     },
     'end': {
       'dateTime': endTime,
-      'timeZone': 'Africa/Lagos',
+      'timeZone': 'America/Los_Angeles',
     },
     'attendees': [doctorName, patientName],
     'reminders': {
