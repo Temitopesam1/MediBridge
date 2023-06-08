@@ -50,7 +50,7 @@ historyContoller.post('/medibridge/historys/:email', async (req, res) => {
 /*getting historys by provider */
 historyContoller.get('/medibridge/historys/:email', async (req, res) => {
   const recipientEmail = req.params.email;
-  await History.find({ email: recipientEmail }, historyRequiredFields)
+  await History.find({ recipientEmail }, historyRequiredFields)
     .then((result) => {
       console.log('Get history for:', recipientEmail);
       res.status(200).json(result);
@@ -59,6 +59,43 @@ historyContoller.get('/medibridge/historys/:email', async (req, res) => {
       console.log(err);
       res.status(400).json({ error: 'Could not get history for user'})
     });
+});
+
+historyContoller.put('/medibridge/historys/:email', async (req, res) => {
+  const { recipientEmail, symptoms, diagnosis, notes, prescriptions } = req.body;
+  const providerEmail = req.params.email;
+  await Recipient.findOne({ email: recipientEmail}, recipientsRequriedFields)
+    .then(async(recipientOb) => {
+      const recipientName = recipientOb.name;
+      const providerOb = await Provider.findOne({ email: providerEmail}, providersRequiredFields);
+      if (providerOb) {
+        const providerName = providerOb.name;
+        const history = {
+          providerEmail,
+          providerName,
+          recipientEmail,
+          recipientName,
+          symptoms,
+          diagnosis,
+          notes,
+          prescriptions
+        }
+        await History.findOneAndUpdate({ email: recipientEmail }, { history }, { new: true })
+          .then((result) => {
+            console.log('Updated history for', recipientName, 'by', providerName);
+            res.status(204).end()
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(400).json({ error: 'Bad request' });
+          })
+      }
+      res.status(400).json({ error: 'Could not save history, no provider found!'})
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(400).json({ error: 'Could not save history, no recipient found!'})
+    })
 });
 
 export default historyContoller;
