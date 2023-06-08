@@ -1,100 +1,111 @@
-require('dotenv').config();
+// Import required modules
 const express = require('express');
-const bodyparser = require('body-parser');
-const { google } = require('googleapis');
+const mongoose = require('mongoose');
 
-
+// Create an instance of Express
 const app = express();
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({extended: false}));
-const port = process.env.PORT || 3000;
 
-
-
-const jwtClient = new google.auth.JWT(
-  process.env.GOOGLE_CLIENT_EMAIL,
-  null,
-  process.env.GOOGLE_PRIVATE_KEY,
-  process.env.SCOPES
-);
-  
-const calendar = google.calendar({
-  version: 'v3',
-  project: process.env.GOOGLE_PROJECT_NUMBER,
-  auth: jwtClient
+// Set up MongoDB connection
+mongoose.connect('mongodb://localhost:27017/Reviews', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
-  
-app.get('/appointment', (req, res) => {
-  calendar.events.list({
-    calendarId: process.env.GOOGLE_CALENDAR_ID,
-    timeMin: (new Date()).toISOString(),
-    maxResults: 10,
-    singleEvents: true,
-    orderBy: 'startTime',
-  }, (err, result) => {
-    if (err) {
-      res.status(500).send('There was an error contacting the Calendar service: ' + err);
-    } else {
-      if (result.data.items.length) {
-        res.status(200).json({ events: result.data.items });
-      } else {
-        res.status(200).json({ message: 'No upcoming events found.' });
-      }
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+// Define the User and Doctor models
+const userSchema = new mongoose.Schema({
+  name: String,
+  ratings: [{
+    doctor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Doctor',
+    },
+    score: {type: Number, default: 0}
+  }],
+});
+
+const doctorSchema = new mongoose.Schema({
+  name: String,
+  averageRating: {type: Number, default: 0}
+});
+
+const User = mongoose.model('User', userSchema);
+const Doctor = mongoose.model('Doctor', doctorSchema);
+
+// API endpoints
+
+// Submit a review
+app.post('/reviews', async (req, res) => {
+  try {
+    const { userId, doctorId, score } = req.body;
+
+    // Check if the user has already rated the doctor
+    const user = await User.findById(userId);
+    const existingRating = user.ratings.find(rating => rating.doctor.toString() === doctorId);
+    if (existingRating) {
+      return res.status(400).json({ message: 'User has already rated this doctor.' });
     }
-  });
-});
-  
-app.post("/appointment",(req,res)=>{
-  const {
-    patientName,
-    doctorName,
-    startTime,
-    endTime,
-    location,
-    summary,
-    description,
-   } = req.body;
-  var event = {
-    'summary': summary,
-    'location': location,
-    'description': description,
-    'start': {
-      'dateTime': startTime,
-      'timeZone': 'America/Los_Angeles',
-    },
-    'end': {
-      'dateTime': endTime,
-      'timeZone': 'America/Los_Angeles',
-    },
-    'attendees': [doctorName, patientName],
-    'reminders': {
-      'useDefault': false,
-      'overrides': [
-        {'method': 'email', 'minutes': 24 * 60},
-        {'method': 'popup', 'minutes': 10},
-      ],
-    },
-  };
-    
-  const auth = new google.auth.GoogleAuth({
-    keyFile: process.env.KEYFILE,
-    scopes: 'https://www.googleapis.com/auth/calendar',
-  });
-  auth.getClient().then(a=>{
-    calendar.events.insert({
-      auth:a,
-      calendarId: process.env.GOOGLE_CALENDAR_ID,
-      resource: event,
-    }, function(err, event) {
-      if (err) {
-        res.status(500).send('There was an error contacting the Calendar service: ' + err);
-        return;
-      }
-      res.status(200).send("Event successfully created!");
-    });
-  })
-})
 
-app.listen(port, () => {
-  console.log(`Socket.IO server running at http://localhost:${port}/`);
+    // Save the rating in the User model
+    user.ratings.push({ doctor: doctorId, score });
+    await user.save();
+
+    // Update the doctor's average rating
+    const doctor = await Doctor.findById(doctorId);
+    const ratings = user.ratings.map(rating => rating.score);
+    doctor.averageRating = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+    await doctor.save();
+
+    return res.status(201).json({ message: 'Review submitted successfully.' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'An error occurred while submitting the review.' });
+  }
+});
+
+// Get reviews for a doctor
+app.get('/reviews/:doctorId', async (req, res) => {
+  try {
+    const { doctorId } = req.params;
+
+    const doctor = await Doctor.findById(doctorId);
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found.' });
+    }
+
+    const users = await User.find({ 'ratings.doctor': doctorId });
+    const reviews = users.map(user => ({
+      userId: user._id,
+      name: user.name,
+      score: user.ratings.find(rating => rating.doctor.toString() === doctorId).score,
+    }));
+
+    return res.status(200).json(reviews);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'An error occurred while fetching the reviews.' });
+  }
+});
+
+// Get average rating for a doctor
+app.get('/average-rating/:doctorId', async (req, res) => {
+  try {
+    const { doctorId } = req.params;
+
+    const doctor = await Doctor.findById(doctorId);
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found.' });
+    }
+
+    return res.status(200).json({ averageRating: doctor.averageRating });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'An error occurred while fetching the average rating.' });
+  }
+});
+
+// Start the server
+app.listen(3000, () => {
+  console.log('Server started on port 3000');
 });
