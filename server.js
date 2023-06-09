@@ -11,6 +11,20 @@ app.use(bodyparser.urlencoded({extended: false}));
 app.use(router);
 
 const port = process.env.PORT || 3000;
+
+
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+import handleConnection from "./controllers/Chat";
+
+// app.use(express.static(__dirname + '/public'));
+
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
+
+io.on('connection', handleConnection);
+
 http.listen(port, () => {
-    console.log(`listening on http://localhost:${port}`);
+    console.log(`Socket.IO server running at http://localhost:${port}/`);
 });

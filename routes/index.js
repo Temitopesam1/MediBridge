@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import router from '../controllers/article';
+import handleConnection from "../controllers/Chat";
+
 const router = Router();
 
-router.use(router);
 
-module.exports = router;
+
+module.exports = router
