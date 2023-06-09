@@ -32,14 +32,10 @@
     "express-openid-connect": "^2.16.0",
     "googleapis": "^105.0.0",
     "mongoose": "^7.2.2",
-<<<<<<< HEAD
     "redis": "^4.6.7",
-    "socket.io": "^4.6.2"
-=======
+    "socket.io": "^4.6.2",
     "mongoose-date-format": "^1.2.0",
-    "node-google-calendar": "^1.1.1",
-    "redis": "^4.6.7"
->>>>>>> appointment
+    "node-google-calendar": "^1.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.0",

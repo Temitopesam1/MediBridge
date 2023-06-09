@@ -1,6 +1,6 @@
-import { open, close, write } from 'fs';
-const fs = require('fs');
-const { join } = require('path');
+// import { open, close, write } from 'fs';
+// const fs = require('fs');
+// const { join } = require('path');
 const connectedUsers = {};
 const typingUsers = {};
 
