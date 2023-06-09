@@ -1,6 +1,8 @@
 node_modules
 credentials.json
+token.json
 thinking-glass-389011-746f56df34f1.json
+.*
 {
     "patientName": "Samantha",
     "doctorname": "temitopesam5@gmail.com",
@@ -10,4 +12,3 @@ thinking-glass-389011-746f56df34f1.json
     "summary": "Testing calender api",
     "discription": "This is the umpteenth test and surely not the last"
 }
-.*
