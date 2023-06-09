@@ -234,7 +234,7 @@ class Appointment{
       
     const auth = new google.auth.GoogleAuth({
       keyFile: process.env.KEYFILE,
-      scopes: 'https://www.googleapis.com/auth/calendar',
+      scopes: SCOPES[0],
     });
     auth.getClient().then(a=>{
       calendar.events.insert({
