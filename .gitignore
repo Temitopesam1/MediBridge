@@ -1,12 +1,8 @@
-node_modules/
-node_modules/*
+node_modules
 .*
 token.json
 credentials.json
 thinking-glass-389011-746f56df34f1.json
-credss.json
-index.js
-
 {
     "patientName": "Samantha",
     "doctorname": "temitopesam5@gmail.com",
