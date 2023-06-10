@@ -1,19 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose")
 
-class DBClients {
-    constructor() {
-        const host = process.env.DB_HOST || 'localhost';
-        const port = process.env.DB_PORT || 27017;
-        const database = process.env.DB_DATABASE || 'files_manager';
-    
-        this.url = process.env.uri;
-    
-        // Use connect method to connect to the server
-        this.client = new MongoClient(this.url, { useUnifiedTopology: true });
-        this.client.connect();
-        this.db = this.client.db(database);
-        this.userCollection = this.db.collection('users');
-        this.fileCollection = this.db.collection('files');
+export default async function connectDB(){
+    try {
+        const conn = await mongoose.connect(process.env.DATABASE_URL, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+        console.log(`MongoDB Connected: ${conn.connection.host}`)
+    } catch(err) {
+        console.error(err)
+        process.exit(1)
     }
 }
-await mongoose.connect('mongodb://localhost:27017/');
