@@ -7,7 +7,7 @@ const usersController = Router();
 
 /*specifying the fields to return*/
 const recipientsRequriedFields = '-_id name age gender address phoneNumber email isSmoking isHypertensive isDiabetic';
-const providersRequiredFields = '-_id name age gender address phoneNumber email specializationDepartment practiceAddress';
+const providersRequiredFields = '-_id name age gender address phoneNumber email specialization, department, practiceAddress';
 
 /*route to get all recipients */
 usersController.get('/medibridge/users/recipients', async (req, res) => {
@@ -54,7 +54,7 @@ usersController.post('/medibridge/users/recipients', async (req, res) => {
       await Recipient.findById(result._id, recipientsRequriedFields)
       .then((result) => {
         console.log('Saved new recipient:', result.email);
-        res.status(201).json(result);
+        res.status(201).send("Recipient Created!");
       })
     .catch((err) => {
       console.log(err);
@@ -65,7 +65,7 @@ usersController.post('/medibridge/users/recipients', async (req, res) => {
 
 /*route to add new provider*/
 usersController.post('/medibridge/users/providers', async (req, res) => {
-  const { name, age, gender, address, phoneNumber, email, licenseNumber, specializationDepartment, practiceAddress } = req.body;
+  const { name, age, gender, address, phoneNumber, email, licenseNumber, specialization, department, practiceAddress } = req.body;
   const user = new Provider({
     name,
     age,
@@ -74,15 +74,16 @@ usersController.post('/medibridge/users/providers', async (req, res) => {
     phoneNumber,
     email,
     licenseNumber,
-    specializationDepartment,
-    practiceAddress
+    specialization,
+    department,
+    practiceAddress,
   });
   await user.save()
     .then(async (result) => {
       await Provider.findById(result._id, providersRequiredFields)
       .then((result) => {
         console.log('Saved new provider:', result.email);
-        res.status(201).json(result);
+        res.status(201).send("Provider created!");
       })
     .catch((err) => {
       console.log(err);

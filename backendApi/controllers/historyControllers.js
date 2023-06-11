@@ -9,8 +9,8 @@ const historyRequiredFields = '-recipientEmail -providerEmail diagnosis symptoms
 const recipientsRequriedFields = '-_id name age gender address phoneNumber email isSmoking isHypertensive isDiabetic';
 const providersRequiredFields = '-_id name age gender address phoneNumber email specializationDepartment practiceAddress';
 
-/*Saving new history by provider */
-historyContoller.post('/medibridge/historys/:email', async (req, res) => {
+/* Saving new history by provider */
+historyContoller.post('/medibridge/history/:email', async (req, res) => {
   const { recipientEmail, symptoms, diagnosis, notes, prescriptions } = req.body;
   const providerEmail = req.params.email;
   await Recipient.findOne({ email: recipientEmail}, recipientsRequriedFields)

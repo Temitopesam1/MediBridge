@@ -8,4 +8,4 @@ const articleSchema = new Schema({
     createdAt: {type: Date, default: Date.now} 
 });
 
-module.exports = mongoose.model('article', articleSchema);
+module.exports = mongoose.model('Article', articleSchema);

@@ -1,24 +1,18 @@
-import Recipient from '../../models/recipientSchema';
-import Provider from '../../models/providerSchema';
+import Recipient from '../models/recipientSchema';
+import Provider from '../models/providerSchema';
 class Reviews{
     async createReview(req, res) {
         try {
           const { userId, doctorId, score } = req.body;
       
-          // Check if the user has already rated the doctor
-          const user = await Recipient.findById(userId);
-          const existingRating = user.ratings.find(rating => rating.doctor.toString() === doctorId);
-          if (existingRating) {
-            return res.status(400).json({ message: 'Recipient has already rated this doctor.' });
-          }
-      
           // Save the rating in the Recipient model
+          const user = await Recipient.findById(userId);
           user.ratings.push({ doctor: doctorId, score });
           await user.save();
       
           // Update the doctor's average rating
           const doctor = await Provider.findById(doctorId);
-          const ratings = user.ratings.map(rating => rating.score);
+          const ratings = user.ratings.find(rating => rating.doctor.toString() === doctorId);
           doctor.averageRating = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
           await doctor.save();
       
