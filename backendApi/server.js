@@ -8,7 +8,7 @@ const app = express();
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended: false}));
 connectDB();
-app.use(router);
+app.use('/medibridge/', router);
 
 const port = process.env.PORT || 3000;
 

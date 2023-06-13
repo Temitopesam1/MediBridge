@@ -1,101 +1,49 @@
-import { Router } from 'express';
-import History from '../models/historySchema';
 import Recipient from '../models/recipientSchema';
-import Provider from '../models/providerSchema';
 
-const historyContoller = Router();
 
-const historyRequiredFields = '-recipientEmail -providerEmail diagnosis symptoms notes prescriptions';
-const recipientsRequriedFields = '-_id name age gender address phoneNumber email isSmoking isHypertensive isDiabetic';
-const providersRequiredFields = '-_id name age gender address phoneNumber email specializationDepartment practiceAddress';
+class HistoryConroller{
+  /* Saving new history by provider */
+  async postHistory(req, res){
+    try{
+      const { provider, symptoms, diagnosis, notes, prescriptions } = req.body;
 
-/* Saving new history by provider */
-historyContoller.post('/medibridge/history/:email', async (req, res) => {
-  const { recipientEmail, symptoms, diagnosis, notes, prescriptions } = req.body;
-  const providerEmail = req.params.email;
-  await Recipient.findOne({ email: recipientEmail}, recipientsRequriedFields)
-    .then(async(recipientOb) => {
-      const recipientName = recipientOb.name;
-      const providerOb = await Provider.findOne({ email: providerEmail}, providersRequiredFields);
-      if (providerOb) {
-        const providerName = providerOb.name;
-        const history = new History({
-          providerEmail,
-          providerName,
-          recipientEmail,
-          recipientName,
-          symptoms,
-          diagnosis,
-          notes,
-          prescriptions
-        });
-        await history.save()
-          .then((result) => {
-            console.log('Saved new history for', recipientName, 'by', providerName);
-            res.status(204).end()
-          })
-          .catch((err) => {
-            console.log(err);
-            res.status(400).json({ error: 'Bad request' });
-          })
+      // Update the recipient's history record
+      const recipient = await Recipient.findById(req.params.id);
+      recipient.history.push({
+        provider,
+        symptoms,
+        diagnosis,
+        notes,
+        prescriptions
+      });
+      await recipient.save();
+
+      return res.status(201).json({ message: 'History submitted successfully.' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'An error occurred while submitting the history.' });
+    }
+  }
+
+ 
+
+  /*getting histories by provider */
+   async getHistory(req, res){
+    try {
+      const recipientId = req.params.id;
+
+      const recipient = await Recipient.findById(recipientId);
+      if (!recipient) {
+        return res.status(404).json({ message: 'Recipient not found.' });
       }
-      res.status(400).json({ error: 'Could not save history, no provider found!'})
-    })
-    .catch((err) => {
-      console.log(err)
-      res.status(400).json({ error: 'Could not save history, no recipient found!'})
-    })
-});
 
-/*getting historys by provider */
-historyContoller.get('/medibridge/historys/:email', async (req, res) => {
-  const recipientEmail = req.params.email;
-  await History.find({ recipientEmail }, historyRequiredFields)
-    .then((result) => {
-      console.log('Get history for:', recipientEmail);
-      res.status(200).json(result);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json({ error: 'Could not get history for user'})
-    });
-});
+      return res.status(200).json({ Histories: recipient.history });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'An error occurred while fetching recipient history.' });
+    }
+  }
+}
 
-historyContoller.put('/medibridge/historys/:email', async (req, res) => {
-  const { recipientEmail, symptoms, diagnosis, notes, prescriptions } = req.body;
-  const providerEmail = req.params.email;
-  await Recipient.findOne({ email: recipientEmail}, recipientsRequriedFields)
-    .then(async(recipientOb) => {
-      const recipientName = recipientOb.name;
-      const providerOb = await Provider.findOne({ email: providerEmail}, providersRequiredFields);
-      if (providerOb) {
-        const providerName = providerOb.name;
-        const history = {
-          providerEmail,
-          providerName,
-          recipientEmail,
-          recipientName,
-          symptoms,
-          diagnosis,
-          notes,
-          prescriptions
-        }
-        await History.findOneAndUpdate({ email: recipientEmail }, { history }, { new: true })
-          .then((result) => {
-            console.log('Updated history for', recipientName, 'by', providerName);
-            res.status(204).end()
-          })
-          .catch((err) => {
-            console.log(err);
-            res.status(400).json({ error: 'Bad request' });
-          })
-      }
-      res.status(400).json({ error: 'Could not save history, no provider found!'})
-    })
-    .catch((err) => {
-      console.log(err)
-      res.status(400).json({ error: 'Could not save history, no recipient found!'})
-    })
-});
-
+const historyContoller = new HistoryConroller();
 export default historyContoller;

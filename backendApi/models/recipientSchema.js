@@ -11,17 +11,25 @@ const recipientSchema = new Schema({
   isSmoking: { type: Boolean, required: true},
   isHypertensive: { type: Boolean, required: true},
   isDiabetic: { type: Boolean, required: true },
-  symptoms: { type: String, required: true },
-  diagnosis: { type: String, required: true },
-  notes: { type: String, required: true },
-  prescriptions: { type: String, required: true },
+  history: [{
+    provider: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Provider',
+    },
+    symptoms: String,
+    diagnosis: String,
+    notes: String,
+    prescriptions: String,
+    createdAt: { type: Date, default: Date.now }
+  }],
   ratings: [{
-            doctor: {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: 'Provider',
-            },
-            score: {type: Number, default: 0}
-        }],
+    doctor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Provider',
+    },
+    score: {type: Number, default: 0}
+  }],
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('Recipient', recipientSchema);

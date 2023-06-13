@@ -1,19 +1,29 @@
 import Recipient from '../models/recipientSchema';
 import Provider from '../models/providerSchema';
+
 class Reviews{
     async createReview(req, res) {
         try {
           const { userId, doctorId, score } = req.body;
       
           // Save the rating in the Recipient model
-          const user = await Recipient.findById(userId);
+          let user = await Recipient.findById(userId);
           user.ratings.push({ doctor: doctorId, score });
           await user.save();
       
           // Update the doctor's average rating
           const doctor = await Provider.findById(doctorId);
-          const ratings = user.ratings.find(rating => rating.doctor.toString() === doctorId);
-          doctor.averageRating = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+
+          // Check if the user has already rated the doctor
+          user = await Recipient.findById(userId);
+          const existingRatings = user.ratings.filter(rating => rating.doctor.toString() === doctorId);
+          if (existingRatings.length > 1) {
+            const ratings = existingRatings.map(rating => rating.score);
+            doctor.averageRating = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+            await doctor.save();
+            return res.status(200).json({ message: 'Review updated for this doctor.' });
+          }
+          doctor.averageRating = score;
           await doctor.save();
       
           return res.status(201).json({ message: 'Review submitted successfully.' });
@@ -23,36 +33,13 @@ class Reviews{
         }
     };
       
-    // Get reviews for a doctor
-    async getReview(req, res) {
-        try {
-          const { doctorId } = req.params;
-      
-          const doctor = await Provider.findById(doctorId);
-          if (!doctor) {
-            return res.status(404).json({ message: 'Provider not found.' });
-          }
-      
-          const users = await Recipient.find({ 'ratings.doctor': doctorId });
-          const reviews = users.map(user => ({
-            userId: user._id,
-            name: user.name,
-            score: user.ratings.find(rating => rating.doctor.toString() === doctorId).score,
-          }));
-      
-          return res.status(200).json(reviews);
-        } catch (error) {
-          console.error(error);
-          return res.status(500).json({ message: 'An error occurred while fetching the reviews.' });
-        }
-    };
-      
-      // Get average rating for a doctor
+  
+    // Get average rating for a doctor
     async getAverageRating(req, res) {
         try {
-          const { doctorId } = req.params;
+          const { id } = req.params;
       
-          const doctor = await Provider.findById(doctorId);
+          const doctor = await Provider.findById(id);
           if (!doctor) {
             return res.status(404).json({ message: 'Provider not found.' });
           }
