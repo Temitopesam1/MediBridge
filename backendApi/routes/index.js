@@ -30,4 +30,16 @@ router.put('/users/providers/:id', usersController.editProvider);
 router.delete('/users/recipients/:id', usersController.deleteRecipient);
 router.delete('/users/providers/:id', usersController.deleteProvider);
 
+// req.oidc.isAuthenticated is provided from the auth router
+// app.get('/', (req, res) => {
+//     res.send(
+//       req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out'
+//     )
+//   });
+  
+//   // The /profile route will show the user profile as JSON
+//   app.get('/profile', requiresAuth(), (req, res) => {
+//     res.send(JSON.stringify(req.oidc.user, null, 2));
+//});
+
 module.exports = router;

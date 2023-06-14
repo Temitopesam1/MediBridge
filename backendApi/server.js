@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const { auth, requiresAuth } = require('express-openid-connect');
 const bodyparser = require('body-parser');
 import router from './routes/index';
 import connectDB from './utils/db';
@@ -11,6 +12,22 @@ connectDB();
 app.use('/medibridge/', router);
 
 const port = process.env.PORT || 3000;
+
+
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  baseURL: process.env.BASE_URL,
+  clientID: process.env.CLIENT_ID,
+  issuerBaseURL: process.env.ISSUER,
+  secret: process.env.SECRET
+};
+
+// The `auth` router attaches /login, /logout
+// and /callback routes to the baseURL
+app.use(auth(config));
+
+
 
 
 // app.get('/', (req, res) => {
@@ -31,12 +48,12 @@ import handleConnection from "./controllers/chat";
 
 // app.use(express.static(__dirname + '/public'));
 
-app.get('/', (req, res) => {
+app.get('/medibridge/chat', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', handleConnection);
 
-http.listen(port, () => {
+http.listen(port, '192.168.43.255', () => {
   console.log(`Socket.IO server running at http://localhost:${port}/`);
 });
