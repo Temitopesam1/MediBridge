@@ -4,6 +4,7 @@ const { auth, requiresAuth } = require('express-openid-connect');
 const bodyparser = require('body-parser');
 import router from './routes/index';
 import connectDB from './utils/db';
+import cors from 'cors';
 
 const app = express();
 
@@ -12,12 +13,14 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   next();
 });
+app.use(cors());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended: false}));
 connectDB();
 app.use('/medibridge/', router);
 
 const port = process.env.PORT || 3000;
+const ipAddress = '0.0.0.0'
 
 
 const config = {
@@ -60,6 +63,6 @@ app.get('/medibridge/chat', (req, res) => {
 
 io.on('connection', handleConnection);
 
-http.listen(port, '0.0.0.0', () => {
-  console.log(`Socket.IO server running at http://192.168.43.107:${port}/`);
+http.listen(port, ipAddress, () => {
+  console.log(`Socket.IO server running at http://${ipAddress}:${port}/`);
 });
