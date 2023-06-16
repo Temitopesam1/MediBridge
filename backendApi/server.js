@@ -60,6 +60,6 @@ app.get('/medibridge/chat', (req, res) => {
 
 io.on('connection', handleConnection);
 
-http.listen(port, "192.168.43.107", () => {
+http.listen(port, '0.0.0.0', () => {
   console.log(`Socket.IO server running at http://192.168.43.107:${port}/`);
 });
