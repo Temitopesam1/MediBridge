@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const { auth, requiresAuth } = require('express-openid-connect');
 const bodyparser = require('body-parser');
@@ -8,9 +9,6 @@ import cors from 'cors';
 
 const app = express();
 
-app.get('/', (req, res) =>{
-  res.status(200).send("welcome to Medibridge");
-})
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", '*');
@@ -25,6 +23,7 @@ app.use('/medibridge/', router);
 
 const port = process.env.PORT || 3000;
 
+app.use('/', express.static(path.resolve(__dirname, 'assets')));
 
 const config = {
   authRequired: false,
