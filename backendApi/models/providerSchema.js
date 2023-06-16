@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const providerSchema = new Schema({
   name: { type: String, required: true },
   age: { type: Number, required: true },
-  phoneNumber: { type: Number, required: true},
+  phoneNumber: { type: String, required: true},
   email: { type: String, required: true, unique: true },
   gender: { type: String, required: true },
   address: { type: String, required: true },
@@ -13,6 +13,19 @@ const providerSchema = new Schema({
   department: { type: String, required: true },
   practiceAddress: { type: String, required: true },
   averageRating: { type: Number, default: 0 },
+  appointments: [{
+    patient: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Recipient',
+    },
+    summary: {type: String, required: true},
+    location: {type: String, required: true},
+    description: {type: String, required: true},
+    startTime: {type: String, required: true},
+    endTime: {type: String, required: true},
+    attendees: {type: String, required: true},
+    createdAt: { type: Date, default: Date.now }
+  }],
 }, { timestamps: true });
 
 module.exports = mongoose.model('Provider', providerSchema);

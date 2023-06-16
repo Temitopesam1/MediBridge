@@ -1,15 +1,155 @@
 const fs = require('fs').promises;
+import Recipient from '../models/recipientSchema';
+import Provider from '../models/providerSchema';
 const fileStructure = require('fs');
 const path = require('path');
 const process = require('process');
 const {authenticate} = require('@google-cloud/local-auth');
 const {google} = require('googleapis');
+require('dotenv').config();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // // If modifying these scopes, delete token.json.
 const SCOPES = [
     'https://www.googleapis.com/auth/calendar',
     'https://www.googleapis.com/auth/calendar.readonly'
 ];
+
+
+const jwtClient = new google.auth.JWT(
+  process.env.GOOGLE_CLIENT_EMAIL,
+  null,
+  process.env.GOOGLE_PRIVATE_KEY,
+  SCOPES[1]
+);
+
+const calendar = google.calendar({
+  version: 'v3',
+  project: process.env.GOOGLE_PROJECT_NUMBER,
+  auth: jwtClient
+});
+
+class Appointment{
+
+  async bookAppointment(req, res){
+    try{
+      let user = await Recipient.findById(req.params.id);
+      user.ratings.push(req.body);
+      await user.save();
+      return res.status(201).json({ message: 'Appointment booked successfully.' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ 'An error occurred while submitting appointment': error });
+    }
+  }
+
+  async getAppointments(req, res){
+    try{
+      let user = await Recipient.findById(req.params.id);
+      if(user.appointment.length){
+        return res.status(200).json({ 'Appointments Booked By You': user.appointment });
+      } else {
+        return res.status(200).json({ message: 'No Appointment Booked By You!' });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ 'An error occurred while fetching appointment': error });
+    }
+  }
+
+
+
+
+
+
+
+
+
+  getAppointment(req, res){
+    calendar.events.list({
+      calendarId: process.env.GOOGLE_CALENDAR_ID,
+      timeMin: (new Date()).toISOString(),
+      maxResults: 10,
+      singleEvents: true,
+      orderBy: 'startTime',
+    }, (err, result) => {
+      if (err) {
+        res.status(500).send('There was an error contacting the Calendar service: ' + err);
+      } else {
+        if (result.data.items.length) {
+          res.status(200).json({ events: result.data.items });
+        } else {
+          res.status(200).json({ message: 'No upcoming events found.' });
+        }
+      }
+    });
+  };
+    
+  createAppointment(req,res){
+    const {
+      patientName,
+      doctorName,
+      startTime,
+      endTime,
+      location,
+      summary,
+      description,
+     } = req.body;
+    const event = {
+      'summary': summary,
+      'location': location,
+      'description': description,
+      'start': {
+        'dateTime': startTime,
+        'timeZone': 'Africa/Lagos',
+      },
+      'end': {
+        'dateTime': endTime,
+        'timeZone': 'Africa/Lagos',
+      },
+      'attendees': [doctorName, patientName],
+      'reminders': {
+        'useDefault': false,
+        'overrides': [
+          {'method': 'email', 'minutes': 24 * 60},
+          {'method': 'popup', 'minutes': 10},
+        ],
+      },
+    };
+      
+    const auth = new google.auth.GoogleAuth({
+      keyFile: process.env.KEYFILE,
+      scopes: SCOPES[0],
+    });
+    auth.getClient().then(a=>{
+      calendar.events.insert({
+        auth:a,
+        calendarId: process.env.GOOGLE_CALENDAR_ID,
+        resource: event,
+      }, function(err, event) {
+        if (err) {
+          res.status(500).send('There was an error contacting the Calendar service: ' + err);
+          return;
+        }
+        res.status(200).send("Event successfully created!" + event);
+      });
+    })
+  }
+}
+
 // // The file token.json stores the user's access and refresh tokens, and is
 // // created automatically when the authorization flow completes for the first
 // // time.
@@ -165,92 +305,8 @@ const SCOPES = [
 // authorize(SCOPES[0]).then(createEvent).catch(console.error);
 // // authorize(SCOPES[1]).then(listEvents).catch(console.error);
 
-const jwtClient = new google.auth.JWT(
-  process.env.GOOGLE_CLIENT_EMAIL,
-  null,
-  process.env.GOOGLE_PRIVATE_KEY,
-  SCOPES[1]
-);
-  
-const calendar = google.calendar({
-  version: 'v3',
-  project: process.env.GOOGLE_PROJECT_NUMBER,
-  auth: jwtClient
-});
 
-class Appointment{
 
-  getAppointment(req, res){
-    calendar.events.list({
-      calendarId: process.env.GOOGLE_CALENDAR_ID,
-      timeMin: (new Date()).toISOString(),
-      maxResults: 10,
-      singleEvents: true,
-      orderBy: 'startTime',
-    }, (err, result) => {
-      if (err) {
-        res.status(500).send('There was an error contacting the Calendar service: ' + err);
-      } else {
-        if (result.data.items.length) {
-          res.status(200).json({ events: result.data.items });
-        } else {
-          res.status(200).json({ message: 'No upcoming events found.' });
-        }
-      }
-    });
-  };
-    
-  createAppointment(req,res){
-    const {
-      patientName,
-      doctorName,
-      startTime,
-      endTime,
-      location,
-      summary,
-      description,
-     } = req.body;
-    var event = {
-      'summary': summary,
-      'location': location,
-      'description': description,
-      'start': {
-        'dateTime': startTime,
-        'timeZone': 'America/Los_Angeles',
-      },
-      'end': {
-        'dateTime': endTime,
-        'timeZone': 'America/Los_Angeles',
-      },
-      'attendees': [doctorName, patientName],
-      'reminders': {
-        'useDefault': false,
-        'overrides': [
-          {'method': 'email', 'minutes': 24 * 60},
-          {'method': 'popup', 'minutes': 10},
-        ],
-      },
-    };
-      
-    const auth = new google.auth.GoogleAuth({
-      keyFile: process.env.KEYFILE,
-      scopes: SCOPES[0],
-    });
-    auth.getClient().then(a=>{
-      calendar.events.insert({
-        auth:a,
-        calendarId: process.env.GOOGLE_CALENDAR_ID,
-        resource: event,
-      }, function(err, event) {
-        if (err) {
-          res.status(500).send('There was an error contacting the Calendar service: ' + err);
-          return;
-        }
-        res.status(200).send("Event successfully created!");
-      });
-    })
-  }
-}
 
 const appointment = new Appointment();
 export default appointment;

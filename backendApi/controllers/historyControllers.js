@@ -18,10 +18,10 @@ class HistoryConroller{
       });
       await recipient.save();
 
-      return res.status(201).json({ message: 'History submitted successfully.' });
+      return res.status(201).json({ message: 'History submitted successfully!' });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'An error occurred while submitting the history.' });
+      return res.status(500).json({ 'An error occurred while submitting the history': error });
     }
   }
 
@@ -40,7 +40,7 @@ class HistoryConroller{
       return res.status(200).json({ Histories: recipient.history });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'An error occurred while fetching recipient history.' });
+      return res.status(500).json({ 'An error occurred while fetching recipient history': error });
     }
   }
 }
