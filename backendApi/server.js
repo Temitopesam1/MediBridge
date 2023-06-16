@@ -1,5 +1,4 @@
 require('dotenv').config();
-const path = require('path');
 const express = require('express');
 const { auth, requiresAuth } = require('express-openid-connect');
 const bodyparser = require('body-parser');
@@ -23,7 +22,6 @@ app.use('/medibridge/', router);
 
 const port = process.env.PORT || 3000;
 
-app.use('/', express.static(path.resolve(__dirname, 'assets')));
 
 const config = {
   authRequired: false,
@@ -38,7 +36,9 @@ const config = {
 // and /callback routes to the baseURL
 app.use(auth(config));
 
-
+app.get('/', (req, res)=>{
+  res.status(200).json({message: "Welcome to medibridge"});
+});
 
 
 // app.get('/', (req, res) => {
