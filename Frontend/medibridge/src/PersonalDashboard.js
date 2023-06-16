@@ -102,8 +102,8 @@ const PersonalDashboard = () => {
     // Fetch patient's profile information from the server
     const fetchPatientInfo = async () => {
       try {
-        const response = await axios.get('http://105.112.146.97:3000/medibridge/users/recipients');
-        setPatientInfo(response.data);
+        const response = await axios.get('http://192.168.43.107:3100/medibridge/users/recipients');
+        setPatientInfo(response.data[0]);
       } catch (error) {
         console.log(error);
       }

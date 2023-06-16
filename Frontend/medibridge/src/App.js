@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import LandingPage from './LandingPage';
-import PersonalDashboard from './PersonalDashboard';
+import ProfileData from './PersonalDashboard';
 import DoctorReviews from './DoctorsReview';
 import Messages from './Messages';
 import MedicalArticles from './Articles';
@@ -54,7 +54,7 @@ const App = () => {
 
       <Routes>
         <Route exact path="/" element ={<LandingPage/>} />
-        <Route path="/dashboard" element={<PersonalDashboard/>} />
+        <Route path="/dashboard" element={<ProfileData/>} />
         <Route path="/doctor-reviews" element={<DoctorReviews/>} />
         <Route path="/messages" element={<Messages/>} />
         <Route path="/medical-articles" element={<MedicalArticles/>} />
