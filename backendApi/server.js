@@ -8,7 +8,7 @@ import connectDB from './utils/db';
 const app = express();
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://172.23.224.1:3001");
+  res.header("Access-Control-Allow-Origin", '*');
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   next();
 });
@@ -60,6 +60,6 @@ app.get('/medibridge/chat', (req, res) => {
 
 io.on('connection', handleConnection);
 
-http.listen(port, '0.0.0.0', () => {
-  console.log(`Socket.IO server running at http://192.168.43.107:${port}/`);
+http.listen(port, () => {
+  console.log(`Socket.IO server running at http://localhost:${port}/`);
 });
