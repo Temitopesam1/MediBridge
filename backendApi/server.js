@@ -54,9 +54,9 @@ app.get('/', (req, res)=>{
 
 
 
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
-import handleConnection from "./controllers/chat";
+// const http = require('http').Server(app);
+// const io = require('socket.io')(http);
+// import handleConnection from "./controllers/chat";
 
 // app.use(express.static(__dirname + '/public'));
 
@@ -64,8 +64,8 @@ app.get('/medibridge/chat', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-io.on('connection', handleConnection);
+// io.on('connection', handleConnection);
 
-http.listen(port, () => {
+app.listen(port, () => {
   console.log(`Socket.IO server running at http://localhost:${port}/`);
 });
