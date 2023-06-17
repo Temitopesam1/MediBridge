@@ -3,23 +3,22 @@ const express = require('express');
 const { auth, requiresAuth } = require('express-openid-connect');
 const bodyparser = require('body-parser');
 import router from './routes/index';
-const mongoose = require("mongoose")
+import connectDB from './utils/db';
 import cors from 'cors';
 
 const app = express();
 
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", '*');
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  next();
-});
+// app.use(function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", '*');
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+//   next();
+// });
 
 app.use(cors());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended: false}));
-
-
+connectDB();
 app.use('/medibridge/', router);
 
 const port = process.env.PORT || 3000;
@@ -39,8 +38,8 @@ const config = {
 app.use(auth(config));
 
 app.get('/', (req, res)=>{
-  res.status(200).json({message: "Welcome to medibridge"});
-});
+  res.status(200).json({message: "Welcome"})
+})
 
 
 // app.get('/', (req, res) => {
@@ -55,9 +54,9 @@ app.get('/', (req, res)=>{
 
 
 
-// const http = require('http').Server(app);
-// const io = require('socket.io')(http);
-// import handleConnection from "./controllers/chat";
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+import handleConnection from "./controllers/chat";
 
 // app.use(express.static(__dirname + '/public'));
 
@@ -65,22 +64,8 @@ app.get('/medibridge/chat', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-// io.on('connection', handleConnection);
+io.on('connection', handleConnection);
 
-async function connectDB(){
-  try {
-      const conn = await mongoose.connect(process.env.DATABASE_URL, {
-          useNewUrlParser: true,
-          useUnifiedTopology: true
-      })
-      console.log(`MongoDB Connected: ${conn.connection.host}`);
-      app.listen(port);
-  } catch(err) {
-      console.error(err)
-      process.exit(1)
-  }
-}
-connectDB();
-// app.listen(port, () => {
-//   console.log(`Socket.IO server running at http://localhost:${port}/`);
-// });
+http.listen(port, () => {
+  console.log(`Socket.IO server running at http://localhost:${port}/`);
+});
