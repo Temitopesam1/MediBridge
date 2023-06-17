@@ -3,7 +3,7 @@ const express = require('express');
 const { auth, requiresAuth } = require('express-openid-connect');
 const bodyparser = require('body-parser');
 import router from './routes/index';
-import connectDB from './utils/db';
+const mongoose = require("mongoose")
 import cors from 'cors';
 
 const app = express();
@@ -18,7 +18,8 @@ app.use(function(req, res, next) {
 app.use(cors());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended: false}));
-connectDB();
+
+
 app.use('/medibridge/', router);
 
 const port = process.env.PORT || 3000;
@@ -66,6 +67,20 @@ app.get('/medibridge/chat', (req, res) => {
 
 // io.on('connection', handleConnection);
 
-app.listen(port, () => {
-  console.log(`Socket.IO server running at http://localhost:${port}/`);
-});
+async function connectDB(){
+  try {
+      const conn = await mongoose.connect(process.env.DATABASE_URL, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true
+      })
+      console.log(`MongoDB Connected: ${conn.connection.host}`);
+      app.listen(port);
+  } catch(err) {
+      console.error(err)
+      process.exit(1)
+  }
+}
+connectDB();
+// app.listen(port, () => {
+//   console.log(`Socket.IO server running at http://localhost:${port}/`);
+// });
