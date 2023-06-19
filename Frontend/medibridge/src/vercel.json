@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "name": "testVercel",
+    "name": "MediBridge",
     "builds": [
       { "src": "App.js", "use": "@vercel/node" }
     ],
