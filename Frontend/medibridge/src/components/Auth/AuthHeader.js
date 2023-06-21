@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import doctor from "../../assets/images/doctor.png";
+//import doctor from "./Form/images/doctor.png";
 const AuthHeader = ({ title }) => {
   return (
     <Header>
@@ -14,7 +14,7 @@ const Header = styled.header`
   min-height: 30rem;
   width: 100%;
   box-sizing: border-box;
-  background: var(--dark-color) url(${doctor});
+  /* background: var(--dark-color) url(); */
   background-position: top right;
   background-size: contain;
   background-repeat: no-repeat;

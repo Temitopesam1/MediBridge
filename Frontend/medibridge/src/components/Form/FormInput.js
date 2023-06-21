@@ -1,5 +1,5 @@
-import { useState } from "react";
-import InputError from "./InputError";
+import React from "react";
+//import InputError from "./InputError";
 import styled from "styled-components";
 
 const FormInput = ({
@@ -11,10 +11,10 @@ const FormInput = ({
   handleOnchange,
   required
 }) => {
-  const [show, setShow] = useState(false);
-  const [emptyInput, setEmptyInput] = useState(false);
+  //const [show, setShow] = useState(false);
+  //const [emptyInput, setEmptyInput] = useState(false);
 
-  const handleOnBlur = () => {
+  /* const handleOnBlur = () => {
     if (value === "") {
       setShow(true);
       setEmptyInput(true);
@@ -22,7 +22,7 @@ const FormInput = ({
       setShow(false);
       setEmptyInput(false);
     }
-  };
+  };*/
 
   return (
     <InputWrapper>
@@ -32,9 +32,9 @@ const FormInput = ({
         id={id}
         placeholder={placeholder}
         value={value}
-        className={emptyInput ? "text-input error" : "text-input"}
+        //className={emptyInput ? "text-input error" : "text-input"}
         required={required ? true : false}
-        onBlur={required ? handleOnBlur : null}
+        //onBlur={required ? handleOnBlur : null}
         onChange={handleOnchange}
       />
       {/* {required && <InputError show={show} />} */}

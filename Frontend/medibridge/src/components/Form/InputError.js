@@ -1,4 +1,4 @@
-// input error
+/* input error
 import styled from "styled-components";
 
 const InputError = ({ show }) => {
@@ -23,5 +23,4 @@ const ErrorInput = styled(InputError)`
   .input-error.show {
     display: block;
   }
-`;
-https://jqh2rg.csb.app/login
+`; */

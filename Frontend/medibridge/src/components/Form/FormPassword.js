@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { IoEyeSharp, IoEyeOffSharp } from "react-icons/io5";
-import InputError from "./InputError";
+//import InputError from "./InputError";
 import styled from "styled-components";
 
 const FormPassword = ({ name, id, value, placeholder, handleOnChange, required }) => {
@@ -18,19 +18,19 @@ const FormPassword = ({ name, id, value, placeholder, handleOnChange, required }
   };
 
   const [show, setShow] = useState(false);
-  const [emptyInput, setEmptyInput] = useState(false);
+  //const [emptyInput, setEmptyInput] = useState(false);
 
-  const handleOnBlur = () => {
+   const handleOnBlur = () => {
     if (value === "") {
       setShow(true);
-      setEmptyInput(true);
+      //setEmptyInput(true);
       setControlFocused(false);
     } else {
       setShow(false);
-      setEmptyInput(false);
+      //setEmptyInput(false);
       setControlFocused(false);
     }
-  };
+  }; 
 
   useEffect(() => {
     let input = inputRef.current;
@@ -63,7 +63,7 @@ const FormPassword = ({ name, id, value, placeholder, handleOnChange, required }
             ref={inputRef}
             placeholder={placeholder}
             required={required}
-            // onBlur={handleOnBlur}
+            onBlur={handleOnBlur}
             onChange={handleOnChange}
           />
           {isVissible ? (
@@ -119,4 +119,3 @@ width: 100%;
 
   }
 `;
-https://jqh2rg.csb.app/login

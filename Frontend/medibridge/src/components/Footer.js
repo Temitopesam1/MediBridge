@@ -7,7 +7,6 @@ const Footerbar = styled.div`
     align-items: center;
     padding-top: 15px;
     bottom: 0;
-    position: absolute;
 
     width: 100vw;
     height: 20vh;
@@ -20,6 +19,7 @@ const Footerbar = styled.div`
     flex: none;
     order: 5;
     flex-grow: 0;
+    flex-shrink: 0;
 `
 
 const Footer = () => {

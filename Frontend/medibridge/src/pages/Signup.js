@@ -1,168 +1,200 @@
-import styled from "styled-components";
-import AuthHeader from "../components/Auth/AuthHeader";
-import { MdEmail } from "react-icons/md";
-import FormInput from "../components/Form/FormInput";
-import FormPassword from "../components/Form/FormPassword";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import styled from 'styled-components';
 
-const Login = () => {
-  const [loginDetails, setLoginDetails] = useState({ email: "", password: "" });
-
-  const handleOnChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    setLoginDetails({ ...loginDetails, [name]: value });
-  };
-  return (
-    <>
-      <AuthHeader title={"Login"} />
-      <Wrapper>
-        <form>
-          <div className="form-group">
-            <label htmlFor="email" className="label">
-              Email Address:
-            </label>
-            <div className="input-box">
-              <MdEmail className="input-icon" />
-              <FormInput
-                name={"email"}
-                id={"email"}
-                placeholder={"johndoe@email.com"}
-                value={loginDetails.email}
-                inputType={"email"}
-                handleOnChange={handleOnChange}
-                required={true}
-              />
-            </div>
-          </div>
-          <div className="form-group">
-            <label htmlFor="password" className="label">
-              Password:
-            </label>
-            <div className="input-box">
-              <span className="pass-icon">***</span>
-              <FormPassword
-                name={"password"}
-                id={"password"}
-                placeholder={"***********"}
-                value={loginDetails.password}
-                required={true}
-                handleOnChange={handleOnChange}
-              />
-            </div>
-          </div>
-          <Link to="/forgot-password" className="form-link">
-            Forgot password?
-          </Link>
-          <button type="submit" className="submit-btn">
-            Login
-          </button>
-          <div className="form-link-box">
-            <p>Don't have an account?</p>{" "}
-            <Link to="/signup" className="form-link signup">
-              Sign Up
-            </Link>
-          </div>
-        </form>
-      </Wrapper>
-    </>
-  );
-};
-
-export default Login;
-
-const Wrapper = styled.main`
-  padding: 4rem;
-
-  form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  form > *:not(:last-child) {
-    margin-bottom: 2rem;
-  }
-
-  .form-group {
-    width: 100%;
-    display: flex;
-    align-items: center;
-  }
-
-  .label {
-    min-width: 12rem;
-    font-size: 1.8rem;
-    font-weight: 500;
-    color: var(--primary-color);
-    margin-right: 1rem;
-  }
-
-  .input-icon {
-    height: 2.5rem;
-    width: 2.5rem;
-    color: var(--primary-color);
-    margin-right: 1rem;
-  }
-
-  .pass-icon {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    text-decoration: underline;
-    padding-bottom: 0;
-    margin-right: 1rem;
-  }
-
-  .input-box {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    border-bottom: 2px solid var(--primary-color);
-    padding: 0.5rem 1rem;
-  }
-
-  .form-link {
-    text-align: end;
-    text-transform: capitalize;
-    font-size: 1.6rem;
-    font-weight: 400;
-    color: var(--secondary-color);
-    text-decoration: none;
-  }
-
-  .submit-btn {
-    width: calc(100% - 14rem);
-    align-self: flex-end;
-    text-align: center;
-    padding: 1rem 0;
-    border: none;
-    outline: none;
-    background: var(--primary-color);
-    color: var(--light-color);
-    border-radius: 5px;
-    font-size: 1.6rem;
-    font-weight: 400;
-  }
-
-  .form-link-box {
-    width: calc(100% - 14rem);
-    align-self: end;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .form-link-box p {
-    font-size: 1.6rem;
-    color: var(--primary-color);
-    font-weight: 400;
-    margin-right: 0.4rem;
-  }
-
-  .form-link.signup {
-    text-decoration: underline;
-  }
+const FormContainer = styled.div`
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 `;
+
+const Title = styled.h2`
+  text-align: center;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 20px;
+`;
+
+const Label = styled.label`
+  margin-bottom: 5px;
+  font-weight: bold;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+const Select = styled.select`
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+const Error = styled.div`
+  color: red;
+  margin-bottom: 10px;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+`;
+
+function RegistrationForm() {
+  const [registerForm, setRegisterForm] = useState({
+    username: '',
+    password: '',
+    email: '',
+    age: '',
+    gender: '',
+    profession: '',
+    profilePicture: '',
+  });
+  const [error, setError] = useState('');
+
+  const handleRegisterFormChange = (event) => {
+    setRegisterForm({ ...registerForm, [event.target.name]: event.target.value });
+  };
+
+  const fetchProfilePicture = () => {
+    // Fetch the user's Gmail profile picture
+    const profilePictureUrl = 'https://example.com/profile-picture.jpg';
+    setRegisterForm({ ...registerForm, profilePicture: profilePictureUrl });
+  };
+
+  const handleRegisterSubmit = (event) => {
+    event.preventDefault();
+
+    // Validate inputs
+    if (
+      !registerForm.username ||
+      !registerForm.password ||
+      !registerForm.email ||
+      !registerForm.age ||
+      !registerForm.gender ||
+      !registerForm.profession
+    ) {
+      setError('Please fill in all the fields.');
+      return;
+    }
+
+    // Post the form data to the backend
+    fetch('/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(registerForm),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        // Reset the form
+        setRegisterForm({
+          username: '',
+          password: '',
+          email: '',
+          age: '',
+          gender: '',
+          profession: '',
+          profilePicture: '',
+        });
+        setError('');
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        setError('Error registering user.');
+      });
+  };
+
+  return (
+    <FormContainer>
+      <Title>Registration Form</Title>
+      <Form onSubmit={handleRegisterSubmit}>
+        <FormGroup>
+          <Label>Username:</Label>
+          <Input
+            type="text"
+            name="username"
+            value={registerForm.username}
+            onChange={handleRegisterFormChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Password:</Label>
+          <Input
+            type="password"
+            name="password"
+            value={registerForm.password}
+            onChange={handleRegisterFormChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Email:</Label>
+          <Input
+            type="email"
+            name="email"
+            value={registerForm.email}
+            onChange={handleRegisterFormChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Age:</Label>
+          <Input
+            type="number"
+            name="age"
+            value={registerForm.age}
+            onChange={handleRegisterFormChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Gender:</Label>
+          <Select name="gender" value={registerForm.gender} onChange={handleRegisterFormChange}>
+            <option value="">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </Select>
+        </FormGroup>
+        <FormGroup>
+          <Label>Profession:</Label>
+          <Input
+            type="text"
+            name="profession"
+            value={registerForm.profession}
+            onChange={handleRegisterFormChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Profile Picture:</Label>
+          <Input
+            type="text"
+            name="profilePicture"
+            value={registerForm.profilePicture}
+            onChange={handleRegisterFormChange}
+          />
+          <Button type="button" onClick={fetchProfilePicture}>
+            Fetch Picture
+          </Button>
+        </FormGroup>
+        {error && <Error>{error}</Error>}
+        <Button type="submit">Register</Button>
+      </Form>
+    </FormContainer>
+  );
+}
+
+export default RegistrationForm;
