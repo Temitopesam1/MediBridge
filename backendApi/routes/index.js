@@ -31,6 +31,7 @@ router.get('/histories/:id', historyContoller.getHistory);
 router.post('/user/', usersController.addUser);
 router.put('/user/', usersController.editUser);
 router.get('/user/', usersController.getUser);
+router.delete('/user/', usersController.deleteUser);
 
 router.post('/history/', historyContoller.postHistory);
 router.post('/user/', usersController.addUser);
@@ -38,10 +39,10 @@ router.put('/user/', usersController.editUser);
 router.get('/user/', usersController.getUser);
 router.get('/login/', authController.login),
 router.get('/logout/', authController.logout);
+
 router.post('/user/image', imageController.postImage);
 router.put('/user/image', imageController.editImage);
 router.get('/user/image/', imageController.getImage);
-router.delete('/user/', usersController.deleteUser);
 
 router.get('/login/', authController.login),
 router.get('/logout/', authController.logout);
