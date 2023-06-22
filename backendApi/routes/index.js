@@ -8,7 +8,6 @@ import historyContoller from '../controllers/historyControllers';
 import goalsController from '../controllers/goalControllers';
 import imageController from '../controllers/image';
 
-
 const router = Router();
 
 router.delete('/article/:id', articleController.deleteArticle);
@@ -21,7 +20,7 @@ router.get('/appointment', appointment.bookAppointment);
 router.post('/appointment', appointment.getAppointments);
 router.delete('/appointment', appointment.deleteAppointment);
 
-router.get('/review/:id', reviews.getAverageRating);
+// router.get('/review/:id', reviews.getAverageRating);
 router.post('/review', reviews.createReview);
 router.post('/review', reviews.createReview);
 
@@ -37,18 +36,16 @@ router.post('/history/', historyContoller.postHistory);
 router.post('/user/', usersController.addUser);
 router.put('/user/', usersController.editUser);
 router.get('/user/', usersController.getUser);
-router.get('/login/', authController.login),
-router.get('/logout/', authController.logout);
 
 router.post('/user/image', imageController.postImage);
 router.put('/user/image', imageController.editImage);
 router.get('/user/image/', imageController.getImage);
 
-router.get('/login/', authController.login),
+router.get('/login/', authController.login);
 router.get('/logout/', authController.logout);
 
 router.post('/user/healthgoals', goalsController.addGoal);
 router.put('/user/healthgoals/:id', goalsController.editGoals);
 router.delete('/user/healthgoals/:id', goalsController.deleteGoals);
 
-module.exports = router;
+export default router;
