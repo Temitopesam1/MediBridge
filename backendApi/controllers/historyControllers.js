@@ -29,29 +29,6 @@ class HistoryConroller{
     }
     return res.status(401).json({ error: 'Unauthorized' });
   }
-
- 
-
-  /*getting histories by provider */
-   async getHistory(req, res){
-    const user = authController.authenticate(req);
-    if (user){
-      try {
-        const recipientId = req.params.id;
-
-        const recipient = await Recipient.findById(recipientId);
-        if (!recipient) {
-          return res.status(404).json({ message: 'Recipient not found.' });
-        }
-
-        return res.status(200).json({ Histories: recipient.history });
-      } catch (error) {
-        console.error(error);
-        return res.status(500).json({ 'An error occurred while fetching recipient history': error });
-      }
-    }
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
 }
 
 const historyContoller = new HistoryConroller();

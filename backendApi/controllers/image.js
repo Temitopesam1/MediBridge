@@ -2,7 +2,7 @@ import authController from './auth';
 const fs = require('fs');
 
 
-path = './Images/';
+const path = './Images/';
 
 
 class ImageController{
@@ -17,7 +17,7 @@ class ImageController{
                 }
                 fs.writeFileSync(localPath, req.body);
                 user.image = localPath;
-                user.save();
+                await user.save();
                 return res.status(200).send('photo uploaded successfully');
             } catch(error){
                 return res.status(500).send("Error in uploading image", error);
@@ -25,7 +25,7 @@ class ImageController{
         }
         return res.status(401).json({ error: 'Unauthorized' });
     }
-    
+
     async getImage(req, res){
         const user = authController.authenticate(req);
         if (user){
@@ -46,7 +46,7 @@ class ImageController{
                 const localPath = `${path}/${uuidv4()}`;
                 fs.writeFileSync(localPath, req.body);
                 user.image = localPath;
-                user.save();
+                await user.save();
                 return res.status(200).send('photo uploaded successfully');
             } catch(error){
                 return res.status(500).send("Error in updating image", error);
