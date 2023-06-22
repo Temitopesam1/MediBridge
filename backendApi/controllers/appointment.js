@@ -8,20 +8,6 @@ const process = require('process');
 const {google} = require('googleapis');
 require('dotenv').config();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // If modifying these scopes, delete token.json.
 const SCOPES = [
     'https://www.googleapis.com/auth/calendar',

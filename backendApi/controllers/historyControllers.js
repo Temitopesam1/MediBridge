@@ -24,15 +24,13 @@ class HistoryConroller{
         return res.status(201).json({ message: 'History submitted successfully!' });
       } catch (error) {
         console.error(error);
-        return res.status(500).json({ 'An error occurred while submitting the history': error });
+        return res.status(500).json({ error: 'An error occurred while submitting the history' });
       }
     }
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
- 
-
-  /*getting histories by provider */
+  /*getting histories by user */
    async getHistory(req, res){
     const user = authController.authenticate(req);
     if (user){
@@ -47,7 +45,7 @@ class HistoryConroller{
         return res.status(200).json({ Histories: recipient.history });
       } catch (error) {
         console.error(error);
-        return res.status(500).json({ 'An error occurred while fetching recipient history': error });
+        return res.status(500).json({ error: 'An error occurred while fetching recipient history' });
       }
     }
     return res.status(401).json({ error: 'Unauthorized' });

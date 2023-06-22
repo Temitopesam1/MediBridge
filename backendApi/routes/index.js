@@ -5,6 +5,7 @@ import appointment from '../controllers/appointment';
 import reviews from '../controllers/reviews';
 import authController from '../controllers/auth';
 import historyContoller from '../controllers/historyControllers';
+import goalsController from '../controllers/goalControllers';
 
 
 const router = Router();
@@ -14,29 +15,26 @@ router.get('/article/:id', articleController.getArticle);
 router.get('/article', articleController.getArticles);
 router.put('/article/:id', articleController.editArticle);
 router.delete('/article/:id', articleController.deleteArticle);
+
 router.get('/appointment', appointment.bookAppointment);
 router.post('/appointment', appointment.getAppointments);
+
 router.post('/review', reviews.createReview);
 router.get('/review/:id', reviews.getAverageRating);
+
 router.post('/history/:id', historyContoller.postHistory);
 router.get('/histories/:id', historyContoller.getHistory);
+
 router.post('/user/', usersController.addUser);
 router.put('/user/', usersController.editUser);
 router.get('/user/', usersController.getUser);
-router.get('/login/', authController.login),
-router.get('/logout/', authController.logout);
 router.delete('/user/', usersController.deleteUser);
 
-// req.oidc.isAuthenticated is provided from the auth router
-// app.get('/', (req, res) => {
-//     res.send(
-//       req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out'
-//     )
-//   });
-  
-//   // The /profile route will show the user profile as JSON
-//   app.get('/profile', requiresAuth(), (req, res) => {
-//     res.send(JSON.stringify(req.oidc.user, null, 2));
-//});
+router.get('/login/', authController.login),
+router.get('/logout/', authController.logout);
+
+router.post('/user/healthgoals', goalsController.addGoal);
+router.put('/user/healthgoals/:id', goalsController.editGoals);
+router.delete('/user/healthgoals/:id', goalsController.deleteGoals);
 
 module.exports = router;
