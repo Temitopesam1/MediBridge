@@ -8,12 +8,12 @@ class HistoryConroller{
     const user = authController.authenticate(req);
     if (user){
       try{
-        const { provider, symptoms, diagnosis, notes, prescriptions } = req.body;
+        const { recipientId, symptoms, diagnosis, notes, prescriptions } = req.body;
 
         // Update the recipient's history record
-        const recipient = await Recipient.findById(req.params.id);
+        const recipient = await Recipient.findById(recipientId);
         recipient.history.push({
-          provider,
+          provider: user._id,
           symptoms,
           diagnosis,
           notes,

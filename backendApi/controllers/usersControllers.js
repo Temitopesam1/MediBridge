@@ -132,12 +132,3 @@ class UsersController{
 
 const usersController = new UsersController();
 export default usersController;
-
-
-data = Buffer.from(image, 'base64').toString('utf-8');
-const path = './Images/';
-const localPath = `${path}/${uuidv4()}`;
-if (!fs.existsSync(path)) {
-  fs.mkdirSync(path, { recursive: true });
-}
-fs.writeFileSync(localPath, data);

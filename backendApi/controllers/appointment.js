@@ -1,6 +1,7 @@
 const fs = require('fs').promises;
 import Recipient from '../models/recipientSchema';
 import Provider from '../models/providerSchema';
+import authController from './auth';
 const fileStructure = require('fs');
 const path = require('path');
 const process = require('process');
@@ -47,15 +48,27 @@ class Appointment{
   async bookAppointment(req, res){
     const user = authController.authenticate(req);
     if (user){
+      if(user.hasOwnProperty('specialization')){
+        try{
+          let provider = await Provider.findById(user._id);
+          provider.appointments.push(req.body);
+          await provider.save();
+          return res.status(201).json({ message: 'Appointment booked successfully.' });
+        } catch (error) {
+          console.error(error);
+          return res.status(500).json({ 'An error occurred while submitting appointment': error });
+        }
+      }
       try{
-        let user = await Recipient.findById(req.params.id);
-        user.ratings.push(req.body);
-        await user.save();
+        let recipient = await Recipient.findById(user._id);
+        recipient.appointments.push(req.body);
+        await recipient.save();
         return res.status(201).json({ message: 'Appointment booked successfully.' });
       } catch (error) {
         console.error(error);
         return res.status(500).json({ 'An error occurred while submitting appointment': error });
       }
+
     }
     return res.status(401).json({ error: 'Unauthorized' });
   }
@@ -63,16 +76,29 @@ class Appointment{
   async getAppointments(req, res){
     const user = authController.authenticate(req);
     if (user){
+      if(!user.hasOwnProperty('specialization')){
+        try{
+          let recipient = await Recipient.findById(user._id);
+          if(recipient.appointment.length){
+            return res.status(200).json({ 'Appointments Booked By You': recipient.appointment });
+          } else {
+            return res.status(200).json({ message: 'No Appointment Booked By You!' });
+          }
+        } catch (error) {
+          console.error(error);
+         return res.status(500).json({ 'An error occurred while fetching appointment': error });
+        }
+      }
       try{
-        let user = await Recipient.findById(req.params.id);
-        if(user.appointment.length){
-          return res.status(200).json({ 'Appointments Booked By You': user.appointment });
+        let provider = await Provider.findById(user._id);
+        if(provider.appointment.length){
+          return res.status(200).json({ 'Appointments Booked By You': provider.appointment });
         } else {
           return res.status(200).json({ message: 'No Appointment Booked By You!' });
         }
       } catch (error) {
         console.error(error);
-        return res.status(500).json({ 'An error occurred while fetching appointment': error });
+       return res.status(500).json({ 'An error occurred while fetching appointment': error });
       }
     }
     return res.status(401).json({ error: 'Unauthorized' });
