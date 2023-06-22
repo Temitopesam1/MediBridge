@@ -4,8 +4,11 @@ const { Schema } = mongoose;
 const providerSchema = new Schema({
   name: { type: String, required: true },
   age: { type: Number, required: true },
+  image: {type: String, required: true },
+  charges: {type: String, required: true },
   phoneNumber: { type: String, required: true},
   email: { type: String, required: true, unique: true },
+  password: {type: String, required: true },
   gender: { type: String, required: true },
   address: { type: String, required: true },
   licenseNumber: { type: String, required: true, unique: true },
@@ -17,6 +20,7 @@ const providerSchema = new Schema({
     patient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Recipient',
+      required: true
     },
     summary: {type: String, required: true},
     location: {type: String, required: true},
@@ -29,3 +33,4 @@ const providerSchema = new Schema({
 }, { timestamps: true });
 
 module.exports = mongoose.model('Provider', providerSchema);
+

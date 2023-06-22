@@ -45,109 +45,118 @@ const calendar = google.calendar({
 class Appointment{
 
   async bookAppointment(req, res){
-    try{
-      let user = await Recipient.findById(req.params.id);
-      user.ratings.push(req.body);
-      await user.save();
-      return res.status(201).json({ message: 'Appointment booked successfully.' });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ 'An error occurred while submitting appointment': error });
+    const user = authController.authenticate(req);
+    if (user){
+      try{
+        let user = await Recipient.findById(req.params.id);
+        user.ratings.push(req.body);
+        await user.save();
+        return res.status(201).json({ message: 'Appointment booked successfully.' });
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ 'An error occurred while submitting appointment': error });
+      }
     }
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
   async getAppointments(req, res){
-    try{
-      let user = await Recipient.findById(req.params.id);
-      if(user.appointment.length){
-        return res.status(200).json({ 'Appointments Booked By You': user.appointment });
-      } else {
-        return res.status(200).json({ message: 'No Appointment Booked By You!' });
-      }
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ 'An error occurred while fetching appointment': error });
-    }
-  }
-
-
-
-
-
-
-
-
-
-  getAppointment(req, res){
-    calendar.events.list({
-      calendarId: process.env.GOOGLE_CALENDAR_ID,
-      timeMin: (new Date()).toISOString(),
-      maxResults: 10,
-      singleEvents: true,
-      orderBy: 'startTime',
-    }, (err, result) => {
-      if (err) {
-        res.status(500).send('There was an error contacting the Calendar service: ' + err);
-      } else {
-        if (result.data.items.length) {
-          res.status(200).json({ events: result.data.items });
+    const user = authController.authenticate(req);
+    if (user){
+      try{
+        let user = await Recipient.findById(req.params.id);
+        if(user.appointment.length){
+          return res.status(200).json({ 'Appointments Booked By You': user.appointment });
         } else {
-          res.status(200).json({ message: 'No upcoming events found.' });
+          return res.status(200).json({ message: 'No Appointment Booked By You!' });
         }
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ 'An error occurred while fetching appointment': error });
       }
-    });
-  };
-    
-  createAppointment(req,res){
-    const {
-      patientName,
-      doctorName,
-      startTime,
-      endTime,
-      location,
-      summary,
-      description,
-     } = req.body;
-    const event = {
-      'summary': summary,
-      'location': location,
-      'description': description,
-      'start': {
-        'dateTime': startTime,
-        'timeZone': 'Africa/Lagos',
-      },
-      'end': {
-        'dateTime': endTime,
-        'timeZone': 'Africa/Lagos',
-      },
-      'attendees': [doctorName, patientName],
-      'reminders': {
-        'useDefault': false,
-        'overrides': [
-          {'method': 'email', 'minutes': 24 * 60},
-          {'method': 'popup', 'minutes': 10},
-        ],
-      },
-    };
-      
-    const auth = new google.auth.GoogleAuth({
-      keyFile: process.env.KEYFILE,
-      scopes: SCOPES[0],
-    });
-    auth.getClient().then(a=>{
-      calendar.events.insert({
-        auth:a,
-        calendarId: process.env.GOOGLE_CALENDAR_ID,
-        resource: event,
-      }, function(err, event) {
-        if (err) {
-          res.status(500).send('There was an error contacting the Calendar service: ' + err);
-          return;
-        }
-        res.status(200).send("Event successfully created!" + event);
-      });
-    })
+    }
+    return res.status(401).json({ error: 'Unauthorized' });
   }
+
+
+
+
+
+
+
+
+
+
+  // getAppointment(req, res){
+  //   calendar.events.list({
+  //     calendarId: process.env.GOOGLE_CALENDAR_ID,
+  //     timeMin: (new Date()).toISOString(),
+  //     maxResults: 10,
+  //     singleEvents: true,
+  //     orderBy: 'startTime',
+  //   }, (err, result) => {
+  //     if (err) {
+  //       res.status(500).send('There was an error contacting the Calendar service: ' + err);
+  //     } else {
+  //       if (result.data.items.length) {
+  //         res.status(200).json({ events: result.data.items });
+  //       } else {
+  //         res.status(200).json({ message: 'No upcoming events found.' });
+  //       }
+  //     }
+  //   });
+  // };
+    
+  // createAppointment(req,res){
+  //   const {
+  //     patientName,
+  //     doctorName,
+  //     startTime,
+  //     endTime,
+  //     location,
+  //     summary,
+  //     description,
+  //    } = req.body;
+  //   const event = {
+  //     'summary': summary,
+  //     'location': location,
+  //     'description': description,
+  //     'start': {
+  //       'dateTime': startTime,
+  //       'timeZone': 'Africa/Lagos',
+  //     },
+  //     'end': {
+  //       'dateTime': endTime,
+  //       'timeZone': 'Africa/Lagos',
+  //     },
+  //     'attendees': [doctorName, patientName],
+  //     'reminders': {
+  //       'useDefault': false,
+  //       'overrides': [
+  //         {'method': 'email', 'minutes': 24 * 60},
+  //         {'method': 'popup', 'minutes': 10},
+  //       ],
+  //     },
+  //   };
+      
+  //   const auth = new google.auth.GoogleAuth({
+  //     keyFile: process.env.KEYFILE,
+  //     scopes: SCOPES[0],
+  //   });
+  //   auth.getClient().then(a=>{
+  //     calendar.events.insert({
+  //       auth:a,
+  //       calendarId: process.env.GOOGLE_CALENDAR_ID,
+  //       resource: event,
+  //     }, function(err, event) {
+  //       if (err) {
+  //         res.status(500).send('There was an error contacting the Calendar service: ' + err);
+  //         return;
+  //       }
+  //       res.status(200).send("Event successfully created!" + event);
+  //     });
+  //   })
+  // }
 }
 
 // // The file token.json stores the user's access and refresh tokens, and is

@@ -8,9 +8,11 @@ const recipientSchema = new Schema({
   address: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   email: { type: String, required: true, unique: true, lowercase: true },
+  password: {type: String, required: true },
   isSmoking: { type: Boolean, required: true},
   isHypertensive: { type: Boolean, required: true},
   isDiabetic: { type: Boolean, required: true },
+  image: {type: String, required: true },
   history: [{
     provider: {
       type: mongoose.Schema.Types.ObjectId,
@@ -42,7 +44,20 @@ const recipientSchema = new Schema({
     attendees: {type: String, required: true},
     createdAt: { type: Date, default: Date.now }
   }],
+  medications: [{
+    doctor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Provider',
+    },
+    medicine: {type: String, required: true },
+    dosage: {type: Number, default: 0}
+  }],
+  healthGoals: [{
+    goal: {type: String, required: true },
+    days: {type: Number, default: 0}
+  }],
 
 }, { timestamps: true });
 
 module.exports = mongoose.model('Recipient', recipientSchema);
+

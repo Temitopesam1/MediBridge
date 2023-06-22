@@ -3,6 +3,8 @@ import Provider from '../models/providerSchema';
 
 class Reviews{
     async createReview(req, res) {
+      const user = authController.authenticate(req);
+      if (user){
         try {
           const { userId, doctorId, score } = req.body;
       
@@ -31,11 +33,15 @@ class Reviews{
           console.error(error);
           return res.status(500).json({ message: 'An error occurred while submitting the review.' });
         }
+      }
+      return res.status(401).json({ error: 'Unauthorized' });
     };
       
   
     // Get average rating for a doctor
     async getAverageRating(req, res) {
+      const user = authController.authenticate(req);
+      if (user){
         try {
           const { id } = req.params;
       
@@ -49,6 +55,8 @@ class Reviews{
           console.error(error);
           return res.status(500).json({ message: 'An error occurred while fetching the average rating.' });
         }
+      }
+      return res.status(401).json({ error: 'Unauthorized' });
     };
       
 }
