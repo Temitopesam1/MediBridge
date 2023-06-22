@@ -44,14 +44,6 @@ const recipientSchema = new Schema({
     attendees: { type: String, required: true },
     createdAt: { type: Date, default: Date.now }
   }],
-  // medications: [{
-  //   doctor: {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     ref: 'Provider',
-  //   },
-  //   medicine: {type: String, required: true },
-  //   dosage: {type: Number, default: 0}
-  // }],
   healthGoals: [{
     goal: { type: String, required: true },
     days: { type: Number, default: 0 }
