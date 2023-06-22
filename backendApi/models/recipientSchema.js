@@ -8,9 +8,11 @@ const recipientSchema = new Schema({
   address: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   email: { type: String, required: true, unique: true, lowercase: true },
+  password: {type: String, required: true },
   isSmoking: { type: Boolean, required: true},
   isHypertensive: { type: Boolean, required: true},
   isDiabetic: { type: Boolean, required: true },
+  image: {type: String, required: true },
   history: [{
     provider: {
       type: mongoose.Schema.Types.ObjectId,
@@ -46,3 +48,4 @@ const recipientSchema = new Schema({
 }, { timestamps: true });
 
 module.exports = mongoose.model('Recipient', recipientSchema);
+

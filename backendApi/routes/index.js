@@ -3,6 +3,7 @@ import usersController from '../controllers/usersControllers';
 import articleController from '../controllers/article';
 import appointment from '../controllers/appointment';
 import reviews from '../controllers/reviews';
+import authController from '../controllers/auth';
 import historyContoller from '../controllers/historyControllers';
 
 
@@ -13,22 +14,18 @@ router.get('/article/:id', articleController.getArticle);
 router.get('/article', articleController.getArticles);
 router.put('/article/:id', articleController.editArticle);
 router.delete('/article/:id', articleController.deleteArticle);
-router.get('/appointment', appointment.getAppointment);
-router.post('/appointment', appointment.createAppointment);
+router.get('/appointment', appointment.bookAppointment);
+router.post('/appointment', appointment.getAppointments);
 router.post('/review', reviews.createReview);
 router.get('/review/:id', reviews.getAverageRating);
 router.post('/history/:id', historyContoller.postHistory);
 router.get('/histories/:id', historyContoller.getHistory);
-router.post('/users/recipients', usersController.postRecipient);
-router.post('/users/providers', usersController.postProvider);
-router.get('/users/recipients', usersController.getRecipients);
-router.get('/users/providers', usersController.getProviders);
-router.get('/users/recipients/:id', usersController.getRecipient);
-router.get('/users/providers/:id', usersController.getProvider);
-router.put('/users/recipients/:id', usersController.editRecipient);
-router.put('/users/providers/:id', usersController.editProvider);
-router.delete('/users/recipients/:id', usersController.deleteRecipient);
-router.delete('/users/providers/:id', usersController.deleteProvider);
+router.post('/user/', usersController.addUser);
+router.put('/user/', usersController.editUser);
+router.get('/user/', usersController.getUser);
+router.get('/login/', authController.login),
+router.get('/logout/', authController.logout);
+router.delete('/user/', usersController.deleteUser);
 
 // req.oidc.isAuthenticated is provided from the auth router
 // app.get('/', (req, res) => {
