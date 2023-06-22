@@ -170,7 +170,7 @@ const PersonalDashboard = () => {
     // Fetch patient's profile information from the server
     const fetchPatientInfo = async () => {
       try {
-        const response = await axios.get('https://medibridge.onrender.com/users/recipients');
+        const response = await axios.get('https://medibridge.onrender.com/medibridge/users/recipients');
         setPatientInfo(response.data[0]);
       } catch (error) {
         console.log(error);
@@ -180,7 +180,7 @@ const PersonalDashboard = () => {
     // Fetch patient's appointments from the server
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get('https://medibridge.onrender.com/medibridge/appointments');
+        const response = await axios.get('https://medibridge.onrender.com/medibridge/appointment');
         setAppointments(response.data);
       } catch (error) {
         console.log(error);
@@ -190,7 +190,7 @@ const PersonalDashboard = () => {
     // Fetch patient's medical history from the server
     const fetchMedicalHistory = async () => {
       try {
-        const response = await axios.get('/api/patient/medical-history');
+        const response = await axios.get('https://medibridge.onrender.com/medibridge/history');
         setMedicalHistory(response.data);
       } catch (error) {
         console.log(error);
@@ -240,7 +240,7 @@ const PersonalDashboard = () => {
     // Fetch patient's educational resources from the server
     const fetchEducationalResources = async () => {
       try {
-        const response = await axios.get('/api/patient/educational-resources');
+        const response = await axios.get('https:medibridge.onrender.com/medibridge/article');
         setEducationalResources(response.data);
       } catch (error) {
         console.log(error);
@@ -258,14 +258,14 @@ const PersonalDashboard = () => {
   }, []);
 
   if (
-    patientInfo === null ||
-    appointments.length === 0 ||
-    medicalHistory.length === 0 ||
-    medications.length === 0 ||
-    healthMetrics.length === 0 ||
-    messages.length === 0 ||
-    healthGoals.length === 0 ||
-    educationalResources.length === 0
+    !patientInfo ||
+    !appointments ||
+    !medicalHistory ||
+    !medications ||
+    !healthMetrics ||
+    !messages ||
+    !healthGoals ||
+    !educationalResources
   ) {
     // Render with dummy data
     const dummyPatientInfo = {

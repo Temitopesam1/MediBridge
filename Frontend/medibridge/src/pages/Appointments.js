@@ -1,220 +1,291 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell, faUser } from '@fortawesome/free-solid-svg-icons';
-
-const Navbar = styled.nav`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px;
-  gap: 295px;
-  width: 100vw;
-  height: 10vh;
-  background: #F2FBFC;
-  border-radius: 10px 10px 0px 0px;
-  
-  ul {
-    list-style-type: none;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-  li {
-    padding: 20px 40px;
-  }
-
-  a {
-    text-decoration: none;
-  }
-`;
-
-const DoctorCard = styled.div`
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-
-  img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin-right: 20px;
-  }
-
-  h3 {
-    margin: 0;
-  }
-
-  p {
-    margin: 5px 0;
-  }
-
-  button {
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-`;
-
-const SearchContainer = styled.div`
-  margin-bottom: 20px;
-
-  input[type='text'] {
-    padding: 8px;
-    font-size: 16px;
-    border: none;
-    text-decoration: underline;
-  }
-`;
-
-const Search = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 30px 40px;
-  gap: 15px;
-  width: 1440px;
-  height: 120px;
-  background: #F2FBFC;
-`;
+import axios from 'axios';
 
 const Appointments = () => {
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState('');
-  const [selectedCity, setSelectedCity] = useState('');
-  const [filteredResults, setFilteredResults] = useState([]);
+  const dummyDoctorsData = [
+    {
+      id: 1,
+      name: 'Dr. John Doe',
+      profession: 'Dentist',
+      location: 'New York',
+      charges: '$100',
+      rating: 4.5,
+      availability: 'Mon-Fri',
+      profileImage: 'https://example.com/profiles/dr-john-doe.jpg',
+    },
+    {
+      id: 2,
+      name: 'Dr. Jane Smith',
+      profession: 'Ophthalmologist',
+      location: 'Los Angeles',
+      charges: '$150',
+      rating: 4.8,
+      availability: 'Mon-Sat',
+      profileImage: 'https://example.com/profiles/dr-jane-smith.jpg',
+    },
+    // Add more dummy doctors as needed
+  ];
+
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [searchLocation, setSearchLocation] = useState('');
+  const [doctorsData, setDoctorsData] = useState([]);
 
   useEffect(() => {
-    const fetchDoctors = async () => {
+    // Fetch doctor data from the database or an API
+    const fetchDoctorsData = async () => {
       try {
-        const response = await axios.get('https://example.com/api/doctors'); // Replace with your API endpoint
-        setSearchResults(response.data);
+        const response = await axios.get('/api/doctors');
+        const data = response.data;
+        setDoctorsData(data);
       } catch (error) {
-        console.log('Error fetching doctors:', error);
+        console.log('Error fetching doctor data:', error);
       }
     };
 
-    fetchDoctors();
+    fetchDoctorsData();
   }, []);
 
-  useEffect(() => {
-    setFilteredResults(
-      searchResults.filter((doctor) =>
-        doctor.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
-  }, [searchResults, searchQuery]);
-
-  const handleSearchInputChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleCountryChange = (event) => {
-    setSelectedCountry(event.target.value);
-    setSelectedCity('');
-  };
-
-  const handleCityChange = (event) => {
-    setSelectedCity(event.target.value);
+  const handleDoctorSelection = (doctor) => {
+    setSelectedDoctor(doctor);
   };
 
   const handleSearch = () => {
-    const filteredDoctors = searchResults.filter(
+    // Perform search or filtering action based on the search location
+    const filtered = dummyDoctorsData.filter(
       (doctor) =>
-        doctor.country === selectedCountry && doctor.city === selectedCity
+        doctor.location.toLowerCase().includes(searchLocation.toLowerCase())
     );
-    setFilteredResults(filteredDoctors);
+    setDoctorsData(filtered);
   };
 
   return (
-    <div>
-      <Navbar>
-        <h2>MediBridge</h2>
-        <ul>
-          <li>
-            <a href="/">Home</a>
-          </li>
-          <li>
-            <a href="/purchase-medicines">Purchase Medicines</a>
-          </li>
-          <li>
-            <a href="/lab-tests">Lab Tests</a>
-          </li>
-          <li>
-            <a href="/notifications">
-              <FontAwesomeIcon icon={faBell} className="bell-icon" style={{ fontSize: '24px', color: 'blue' }} />
-            </a>
-          </li>
-          <li>
-            <a href="./">
-              <FontAwesomeIcon icon={faUser} className="user-icon" />
-            </a>
-          </li>
-        </ul>
-      </Navbar>
+    <Container>
+      <SearchContainer>
+        <SearchSelect>
+          <option value="">Select Profession</option>
+          <option value="Dentist">Dentist</option>
+          <option value="Ophthalmologist">Ophthalmologist</option>
+          <option value="General medicine">General medicine</option>
+          <option value="Gynecologist">Gynecologist</option>
+          <option value="Pediatrician">Pediatrician</option>
+        </SearchSelect>
+        <SearchInput
+          type="text"
+          placeholder="Enter Location"
+          value={searchLocation}
+          onChange={(e) => setSearchLocation(e.target.value)}
+        />
+        <SearchButton onClick={handleSearch}>Search</SearchButton>
+      </SearchContainer>
 
-      <Search>
-        <SearchContainer>
-          <input
-            type="text"
-            placeholder="Search for doctors"
-            value={searchQuery}
-            onChange={handleSearchInputChange}
-          />
-        </SearchContainer>
-        <div>
-          <label>Country:</label>
-          <select value={selectedCountry} onChange={handleCountryChange}>
-            {/* Country options... */}
-          </select>
-        </div>
-        <div>
-          <label>City:</label>
-          <select
-            value={selectedCity}
-            onChange={handleCityChange}
-            disabled={!selectedCountry}
-          >
-            {/* City options based on selected country... */}
-          </select>
-        </div>
-        <button
-          onClick={handleSearch}
-          disabled={!selectedCountry || !selectedCity}
-        >
-          Search
-        </button>
-      </Search>
-
-      <div>
-        {filteredResults.map((doctor, index) => (
-          <DoctorCard key={index}>
-            <img src={doctor.profilePicture} alt="Doctor Profile" />
-            <div>
-              <h3>{doctor.name}</h3>
-              <p>Profession: {doctor.profession}</p>
-              <p>Location: {doctor.location}</p>
-              <p>Fee: {doctor.fee}</p>
-              <p>Rating: {doctor.rating}</p>
-              <p>Availability: {doctor.availability}</p>
-              <button>Book Clinic Visit</button>
-            </div>
-          </DoctorCard>
-        ))}
-      </div>
-    </div>
+      {doctorsData.length > 0 ? (
+        <DoctorsContainer>
+          {doctorsData.map((doctor) => (
+            <DoctorCard
+              key={doctor.id}
+              onClick={() => handleDoctorSelection(doctor)}
+              selected={selectedDoctor === doctor}
+            >
+              <ProfileImage src={doctor.profileImage} alt={doctor.name} />
+              <DetailsContainer>
+                <Name>{doctor.name}</Name>
+                <Profession>{doctor.profession}</Profession>
+                <Location>{doctor.location}</Location>
+                <Charges>{doctor.charges} Consultation Fee</Charges>
+              </DetailsContainer>
+              <RatingAvailability>
+                <Rating>{doctor.rating}</Rating>
+                <Availability>{doctor.availability}</Availability>
+                <BookButton disabled={selectedDoctor === doctor}>Book a Clinic Visit</BookButton>
+              </RatingAvailability>
+            </DoctorCard>
+          ))}
+        </DoctorsContainer>
+      ) : (
+        <NoDoctorsMessage>No doctors found.</NoDoctorsMessage>
+      )}
+    </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  isolation: isolate;
+  position: relative;
+  box-sizing: border-box;
+  padding: 30px 40px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 30px;
+  letter-spacing: 0px;
+  width: 100vw;
+  height: 250-x;
+`;
+
+const SearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+`;
+
+const SearchSelect = styled.select`
+  padding: 0.5rem;
+  margin-right: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  // Add additional styles as needed
+`;
+
+const SearchInput = styled.input`
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  // Add additional styles as needed
+`;
+
+const SearchButton = styled.button`
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  // Add additional styles as needed
+`;
+
+const DoctorsContainer = styled.div`
+  display: flex;
+  padding: 30px 40px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 30px;
+  height: 80px;
+  width: 1360px;
+  font-size: 12px;
+`;
+
+const DoctorCard = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 30px;
+  flex: 1 0 0;
+  padding: 0;
+  border: 1px solid blue;
+  width: 100vw;
+  height: 150px;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+`;
+
+const ProfileImage = styled.img`
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+`;
+
+const DetailsContainer = styled.div`
+  display: flex;
+  position: relative;
+  isolation: isolate;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0;
+  font-size: 8px;
+  height: 100
+  box-sizing: border-box;
+  flex: 1;
+  margin: 0px 0px 0px 30px;
+`;
+
+const RatingAvailability = styled.div`
+  display: flex;
+  position: relative;
+  isolation: isolate;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
+  align-self: stretch;
+  margin: 0px 0px 0px 30px;
+  height: 100%;
+  width: 228.63px;
+`;
+
+const Name = styled.div`
+  text-align: left;
+  white-space: pre-wrap;
+  font-synthesis: none;
+  color: rgba(0, 56, 70, 1);
+  font-style: normal;
+  font-family: Sofia Sans;
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: 0px;
+  text-decoration: none;
+  text-transform: none;
+  margin-bottom: 4px;
+`;
+
+const Profession = styled.p`
+  color: #04a7c3;
+  padding: 0;
+  margin-bottom: 5px;
+  line-height: 1;
+  font-size: 16px;
+  font-family: Sofia Sans;
+`;
+
+const Location = styled.p`
+  color: #1e1e1e;
+  font-size: 16px;
+  padding: 0;
+  margin-top: 4px;
+  font-family: Sofia Sans;
+`;
+
+const Charges = styled.p`
+  color: #1e1e1e;
+  font-size: 20px;
+  padding: 0;
+  margin: 0;
+  font-family: Sofia Sans;
+  font-weight: 500;
+`;
+
+const Rating = styled.p`
+  margin: 0;
+  // Add additional styles as needed
+`;
+
+const Availability = styled.div`
+  display: flex;
+  align-items: center;
+  color: #1e1e1e;
+  font-size: 16px;
+  font-family: Sofia Sans;
+  margin-top: 0.5rem;
+`;
+
+const BookButton = styled.button`
+  padding: 0.5rem 1rem;
+  background-color: ${({ disabled }) => (disabled ? '#ccc' : 'blue')};
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  // Add additional styles as needed
+`;
+
+const NoDoctorsMessage = styled.p`
+  color: #1e1e1e;
+  font-size: 20px;
+  font-family: Sofia Sans;
+`;
 
 export default Appointments;

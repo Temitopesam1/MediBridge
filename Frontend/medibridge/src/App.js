@@ -2,20 +2,27 @@ import React from 'react';
 //import LandingPage from './pages/LandingPage';
 import Navbar from './components/Navbar';
 import styled from 'styled-components';
-import BackgroundImage from './assets/images/MedicalBackground.jpg'
+import { Helmet } from 'react-helmet';
+import Icon from './assets/images/favicon.ico';
 
 const Main = styled.main`
-  color: white;
-  background-image: url(${BackgroundImage});
-  background-size: cover;
-  background-repeat: no-repeat;
-`
+  color: black;
+  width: 100vw;
+  height: 100vh;
+  `;
 
 const App = () => {
   return (
+    <>
+    <Helmet>
+      <title>MediBridge</title>
+      <meta name="description" content="A Healthcare App" />
+      <link rel="icon" type="image/png" href={Icon} />
+    </Helmet>
     <Main>
       <Navbar />
     </Main>
+    </>
   );
 }
 

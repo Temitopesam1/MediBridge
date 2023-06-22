@@ -3,23 +3,16 @@ import styled from "styled-components";
 
 const Footerbar = styled.div`
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 15px;
-    bottom: 0;
-
-    width: 100vw;
-    height: 20vh;
-
-    background: linear-gradient(93.44deg, #003846 0%, #04A7C3 100%);
-    border-radius: 0px 0px 10px 10px;
-
-    /* Inside auto layout */
-
-    flex: none;
-    order: 5;
-    flex-grow: 0;
-    flex-shrink: 0;
+    position: relative;
+    isolation: isolate;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0px;
+    boxSizing: border-box;
+    height: 43px;
+    width: 846px;
+    margin: 30px 0px 0px 0px; 
 `
 
 const Footer = () => {

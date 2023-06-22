@@ -5,12 +5,16 @@ import heroImage from '../assets/images/hero-image.jpg';
 import feature1 from '../assets/images/feature-1 (1).jpg';
 import feature2 from '../assets/images/feature-2.jpg';
 import feature3 from '../assets/images/feature-3.jpg';
+import Logo from '../assets/images/Logo.jpeg';
 
 const LandingPage = () => {
   return (
     <Container>
       <Header>
-        <Logo>MediBridge App</Logo>
+        <LogoContainer>
+          <LogoImage src={Logo} alt='Logo Image' />
+          <LogoHeader>MediBridge App</LogoHeader>
+          </LogoContainer>
       </Header>
       <Hero>
         <HeroText>
@@ -65,9 +69,19 @@ const Header = styled.header`
   margin-bottom: 40px;
 `;
 
-const Logo = styled.h1`
+const LogoContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const LogoHeader = styled.h1`
   font-size: 24px;
   font-weight: bold;
+`;
+
+const LogoImage = styled.img`
+  width: 50px;
+  height: 80px;
 `;
 
 const Hero = styled.section`

@@ -34,11 +34,15 @@ const NavLink = styled.li`
   text-decoration: none;
   a{
     margin-left: 20px;
-    color: #00FFFF;
+    color: #43014a;
     text-decoration: none;
 
     &:hover {
-      color: #800080;
+      color: #f9d7fc;
+    }
+
+    &:active {
+      color: #066f80;
     }
   }
 `;
