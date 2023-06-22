@@ -15,12 +15,9 @@ app.use('/', router);
 
 const port = process.env.PORT || 3000;
 
-
-
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 import handleConnection from "./controllers/chat";
-
 
 app.get('/chat', (req, res) => {
   res.sendFile(__dirname + '/index.html');
@@ -29,5 +26,5 @@ app.get('/chat', (req, res) => {
 io.on('connection', handleConnection);
 
 http.listen(port, () => {
-  console.log(`Socket.IO server running at http://localhost:${port}/`);
+  console.log(`Server running at http://localhost:${port}/`);
 });

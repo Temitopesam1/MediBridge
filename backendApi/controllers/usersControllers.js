@@ -16,26 +16,34 @@ class UsersController{
 
   /*route to add new recipient*/
   async addUser(req, res){
-    const reqBody = req.body;
     if (req.body.provider){
-      try{
-        const user = new Recipient({ reqBody });
+      const { name, age, gender, password, address, phoneNumber, 
+        email, licenceNumber, specialization, department, practiceAddress, charges } = req.body;
+      try {
+        const user = new Provider({
+          name,
+          age,
+          gender,
+          address,
+          phoneNumber,
+          email,
+          licenceNumber,
+          specialization,
+          department,
+          practiceAddress,
+          charges,
+          password: sha1(password)
+        });
         await user.save();
-        return res.status(201).send("Recipient Created!");
-      } catch(error){
+        return res.status(201).send("Provider Created!");
+      } 
+      catch(error){
         return res.status(400).json({ 'Error saving user': error })
       }
     }
-    const { name, age, gender, password, image, address, phoneNumber, email, isSmoking, isHypertensive, isDiabetic } = req.body;
+    const { name, age, gender, password, address, phoneNumber, email, isSmoking, isHypertensive, isDiabetic } = req.body;
     try{
-      data = Buffer.from(image, 'base64').toString('utf-8');
-        const path = './Image/';
-        const localPath = `${path}/${uuidv4()}`;
-        if (!fs.existsSync(path)) {
-          fs.mkdirSync(path, { recursive: true });
-        }
-        fs.writeFileSync(localPath, data);
-      const user = new Provider({
+        const user = new Recipient({
         name,
         age,
         gender,
@@ -45,12 +53,12 @@ class UsersController{
         isSmoking,
         isHypertensive,
         isDiabetic,
-        password: sha1(password),
-        image: localPath
+        password: sha1(password)
       });
       await user.save();
-      return res.status(201).send("Provider Created!");
-    } catch(error){
+      return res.status(201).send("Recipient Created!");
+    } 
+    catch(error){
       return res.status(400).json({ 'Error saving user': error })
     }
   }
@@ -124,3 +132,12 @@ class UsersController{
 
 const usersController = new UsersController();
 export default usersController;
+
+
+data = Buffer.from(image, 'base64').toString('utf-8');
+const path = './Images/';
+const localPath = `${path}/${uuidv4()}`;
+if (!fs.existsSync(path)) {
+  fs.mkdirSync(path, { recursive: true });
+}
+fs.writeFileSync(localPath, data);

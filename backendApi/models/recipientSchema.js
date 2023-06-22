@@ -12,7 +12,7 @@ const recipientSchema = new Schema({
   isSmoking: { type: Boolean, required: true},
   isHypertensive: { type: Boolean, required: true},
   isDiabetic: { type: Boolean, required: true },
-  image: {type: String, required: true },
+  image: { type: String },
   history: [{
     provider: {
       type: mongoose.Schema.Types.ObjectId,
@@ -36,25 +36,25 @@ const recipientSchema = new Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Provider',
     },
-    summary: {type: String, required: true},
-    location: {type: String, required: true},
-    description: {type: String, required: true},
-    startTime: {type: String, required: true, unique: true},
-    endTime: {type: String, required: true, unique: true},
-    attendees: {type: String, required: true},
+    summary: { type: String, required: true },
+    location: { type: String, required: true },
+    description: { type: String, required: true },
+    startTime: { type: String, required: true, unique: true },
+    endTime: { type: String, required: true, unique: true },
+    attendees: { type: String, required: true },
     createdAt: { type: Date, default: Date.now }
   }],
-  medications: [{
-    doctor: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Provider',
-    },
-    medicine: {type: String, required: true },
-    dosage: {type: Number, default: 0}
-  }],
+  // medications: [{
+  //   doctor: {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: 'Provider',
+  //   },
+  //   medicine: {type: String, required: true },
+  //   dosage: {type: Number, default: 0}
+  // }],
   healthGoals: [{
-    goal: {type: String, required: true },
-    days: {type: Number, default: 0}
+    goal: { type: String, required: true },
+    days: { type: Number, default: 0 }
   }],
 
 }, { timestamps: true });

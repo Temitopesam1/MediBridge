@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const providerSchema = new Schema({
   name: { type: String, required: true },
   age: { type: Number, required: true },
-  image: {type: String, required: true },
+  image: { type: String },
   charges: {type: String, required: true },
   phoneNumber: { type: String, required: true},
   email: { type: String, required: true, unique: true },

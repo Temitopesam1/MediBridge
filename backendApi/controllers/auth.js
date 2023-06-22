@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-/* eslint-disable class-methods-use-this */
 import sha1 from 'sha1';
 import { v4 as uuidv4 } from 'uuid';
 import Recipient from '../models/recipientSchema';
@@ -15,7 +13,7 @@ class AuthController {
         const password = decodedBase64.split(':')[1];
         let user = await Provider.findOne({ email, password: sha1(password) });
         if (!user) {
-            user = await Provider.findOne({ email, password: sha1(password) });
+            user = await Recipient.findOne({ email, password: sha1(password) });
             if (!user){
                 return res.status(401).json({ error: 'Unauthorized' });
             }
@@ -29,8 +27,8 @@ class AuthController {
     async logout(req, res) {
         const token = req.headers['x-token'];
         const key = `auth_${token}`;
-        const user = await redisClient.get(key);
-        if (user) {
+        const userId = await redisClient.get(key);
+        if (userId) {
             redisClient.del(key);
             return res.status(204).end();
         }
@@ -53,6 +51,7 @@ class AuthController {
                 return user;
             }
         }
+        return null;
     }
 }
 const authController = new AuthController();
