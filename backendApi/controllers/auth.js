@@ -7,6 +7,7 @@ import redisClient from '../utils/redis';
 class AuthController {
     async login(req, res) {
         const encodedBase64 = JSON.stringify(req.headers.authorization);
+        console.log(encodedBase64);
         const base64 = encodedBase64.split(' ')[1];
         const decodedBase64 = Buffer.from(base64, 'base64').toString('utf-8');
         const email = decodedBase64.split(':')[0];
@@ -20,8 +21,12 @@ class AuthController {
         }
         const token = uuidv4();
         const key = `auth_${token}`;
-        await redisClient.set(key, user._id.toString(), 86400);
-        return res.status(200).json({ token });
+        try{
+            await redisClient.set(key, user._id.toString(), 86400);
+            return res.status(200).json({ token });
+        } catch(error){
+            return res.status(500).send("Not connected!");
+        }
     }
     
     async logout(req, res) {

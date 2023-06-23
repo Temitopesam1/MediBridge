@@ -1,7 +1,7 @@
 import Recipient from '../models/recipientSchema';
 import Provider from '../models/providerSchema';
 import authController from './auth';
-const fs = require('fs');
+import sha1 from 'sha1';
 
 
 
@@ -18,7 +18,7 @@ class UsersController{
   async addUser(req, res){
     if (req.body.provider){
       const { name, age, gender, password, address, phoneNumber, 
-        email, licenceNumber, specialization, department, practiceAddress, charges } = req.body;
+        email, licenseNumber, specialization, department, practiceAddress, charges } = req.body;
       try {
         const user = new Provider({
           name,
@@ -27,7 +27,7 @@ class UsersController{
           address,
           phoneNumber,
           email,
-          licenceNumber,
+          licenseNumber,
           specialization,
           department,
           practiceAddress,
@@ -38,6 +38,7 @@ class UsersController{
         return res.status(201).send("Provider Created!");
       } 
       catch(error){
+        console.log(error.message);
         return res.status(400).json({ 'Error saving user': error })
       }
     }
@@ -59,6 +60,7 @@ class UsersController{
       return res.status(201).send("Recipient Created!");
     } 
     catch(error){
+      console.log(error);
       return res.status(400).json({ 'Error saving user': error })
     }
   }

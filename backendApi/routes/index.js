@@ -21,8 +21,6 @@ router.get('/appointment', appointment.bookAppointment);
 router.post('/appointment', appointment.getAppointments);
 router.delete('/appointment', appointment.deleteAppointment);
 
-router.get('/review/:id', reviews.getAverageRating);
-router.post('/review', reviews.createReview);
 router.post('/review', reviews.createReview);
 
 router.post('/history/:id', historyContoller.postHistory);

@@ -39,8 +39,8 @@ const recipientSchema = new Schema({
     summary: { type: String, required: true },
     location: { type: String, required: true },
     description: { type: String, required: true },
-    startTime: { type: String, required: true, unique: true },
-    endTime: { type: String, required: true, unique: true },
+    startTime: { type: String, required: true },
+    endTime: { type: String, required: true },
     attendees: { type: String, required: true },
     createdAt: { type: Date, default: Date.now }
   }],

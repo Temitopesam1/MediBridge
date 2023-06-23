@@ -4,28 +4,18 @@ require('dotenv').config();
 
 class RedisClient {
     constructor() {
-      this.client = createClient({
-        password: process.env.PASSWORD, //'vPe1M3wWUTSkrD1GDgtYRXxn1LBo2ad3',
-        socket: {
-            host: 'redis-14213.c10.us-east-1-2.ec2.cloud.redislabs.com',
-            port: 14213
-        }
-    });
-      this.connected = true;
-  
-      // Display any errors in the console
-      this.client.on('error', (err) => {
-        this.connected = false;
-        console.log(err.toString());
-      });
-      this.client.on('ready', () => {
-        this.connected = true;
-      });
+        this.client = createClient({
+            password: process.env.PASSWORD,
+            socket: {
+                host: 'redis-14213.c10.us-east-1-2.ec2.cloud.redislabs.com',
+                port: 14213
+            }
+        });
     }
   
-    isAlive() {
-      return this.connected;
-    }
+    async connect(){ 
+        await this.client.connect().then(()=> console.log("Redis connected"));
+    };
   
     get(key) {
       return new Promise((resolve, reject) => {
@@ -41,7 +31,7 @@ class RedisClient {
   
     set(key, value, duration) {
       return new Promise((resolve, reject) => {
-        this.client.setex(key, duration, value, (err, reply) => {
+        this.client.setEx(key, duration, value, (err, reply) => {
           if (err) {
             reject(err);
           } else {
