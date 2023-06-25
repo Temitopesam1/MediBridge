@@ -1,60 +1,105 @@
-import sha1 from 'sha1';
-import { v4 as uuidv4 } from 'uuid';
 import Recipient from '../models/recipientSchema';
 import Provider from '../models/providerSchema';
-import redisClient from '../utils/redis';
+import njwt from 'njwt';
+require('dotenv').config();
+import bcrypt from 'bcryptjs';
+
+const { APP_SECRET } = process.env;
+
+
+function encodeToken(tokenData) {
+    const jwt = njwt.create(tokenData, APP_SECRET, 'HS512').compact();
+    jwt.setExpiration(new Date().getTime() + (60*60*2000));
+    console.log(jwt);
+    return jwt
+}
+
+function decodeToken(token) {
+    return njwt.verify(token, APP_SECRET, 'HS512').body;
+}
 
 class AuthController {
+
+    // This express middleware attaches `userId` to the `req` object if a user is
+    // authenticated. This middleware expects a JWT token to be stored in the
+    // `Access-Token` header.
+    async jwtAuthenticationMiddleware(req, res, next){
+        const token = req.header('Access-Token');
+        if (!token) {
+            return next();
+        }
+  
+        try {
+            const decoded = decodeToken(token);
+            const { userId } = decoded;
+  
+            let user = await Provider.findById(userId);
+            if (!user){
+                user = await Recipient.findById(userId);
+                if (!user){
+                    return null;
+                }
+            }
+            req.userId = userId;
+        } catch (e) {
+            return next();
+        }
+        next();
+    };
+
+    // This middleware stops the request if a user is not authenticated.
+    isAuthenticatedMiddleware(req, res, next) {
+        if (req.userId) {
+            return next();
+        }
+        return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    // This endpoint generates and returns a JWT access token given authentication
+    // data.
     async login(req, res) {
         const encodedBase64 = JSON.stringify(req.headers.authorization);
-        console.log(encodedBase64);
         const base64 = encodedBase64.split(' ')[1];
         const decodedBase64 = Buffer.from(base64, 'base64').toString('utf-8');
         const email = decodedBase64.split(':')[0];
         const password = decodedBase64.split(':')[1];
-        let user = await Provider.findOne({ email, password: sha1(password) });
+        let user = await Provider.findOne({ email });
         if (!user) {
-            user = await Recipient.findOne({ email, password: sha1(password) });
+            user = await Recipient.findOne({ email });
             if (!user){
-                return res.status(401).json({ error: 'Unauthorized' });
+                return res.status(401).json({ error: 'Invalid Email or Password' });
             }
         }
-        const token = uuidv4();
-        const key = `auth_${token}`;
+        // const isMatch = await bcrypt.compare(password, user.password);
+        // if(!isMatch){
+        //     console.log(password, user.password);
+        //     return res.status(401).json({ error: 'Invalid Email or Password' });
+        // }
         try{
-            await redisClient.set(key, user._id.toString(), 86400);
-            return res.status(200).json({ token });
+            const accessToken = encodeToken({ userId: user.id });
+            return res.status(200).json({ accessToken });
         } catch(error){
+            console.log(error);
             return res.status(500).send("Not connected!");
-        }
+        }        
     }
     
     async logout(req, res) {
-        const token = req.headers['x-token'];
-        const key = `auth_${token}`;
-        const userId = await redisClient.get(key);
-        if (userId) {
-            redisClient.del(key);
-            return res.status(204).end();
-        }
-        return res.status(401).json({ error: 'Unauthorized' });
+        req.userId = false;
+        req.session.destroy();
+        return res.status(204).end();
     }
 
     async authenticate(req) {
-        const token = req.headers['x-token'];
-        if (token) {
-            const key = `auth_${token}`;
-            let userId = await redisClient.get(key);
-            if (userId) {
-                let user = await Provider.findById(userId);
+        if (req.userId){
+            let user = await Provider.findById(req.userId);
+            if (!user){
+                user = await Recipient.findById(req.userId);
                 if (!user){
-                    user = await Recipient.findById(userId);
-                    if (!user){
-                        return null;
-                    }
+                    return null;
                 }
-                return user;
             }
+            return user;
         }
         return null;
     }

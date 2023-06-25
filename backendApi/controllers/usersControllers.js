@@ -1,8 +1,10 @@
 import Recipient from '../models/recipientSchema';
 import Provider from '../models/providerSchema';
 import authController from './auth';
-import sha1 from 'sha1';
+const bcrypt = require('bcryptjs');
 
+
+let hshpsswrd;
 
 
 class UsersController{
@@ -17,8 +19,8 @@ class UsersController{
   /*route to add new recipient*/
   async addUser(req, res){
     if (req.body.provider){
-      const { name, age, gender, password, address, phoneNumber, 
-        email, licenseNumber, specialization, department, practiceAddress, charges } = req.body;
+      const { name, age, gender, password, address, phoneNumber, email, licenseNumber, specialization, department, practiceAddress, charges } = req.body;
+      hshpsswrd = await bcrypt.hash(password, 10);
       try {
         const user = new Provider({
           name,
@@ -32,7 +34,7 @@ class UsersController{
           department,
           practiceAddress,
           charges,
-          password: sha1(password)
+          password: hshpsswrd
         });
         await user.save();
         return res.status(201).send("Provider Created!");
@@ -43,8 +45,9 @@ class UsersController{
       }
     }
     const { name, age, gender, password, address, phoneNumber, email, isSmoking, isHypertensive, isDiabetic } = req.body;
+    hshpsswrd = await bcrypt.hash(password, 10);
     try{
-        const user = new Recipient({
+      const user = new Recipient({
         name,
         age,
         gender,
@@ -54,7 +57,7 @@ class UsersController{
         isSmoking,
         isHypertensive,
         isDiabetic,
-        password: sha1(password)
+        password: hshpsswrd
       });
       await user.save();
       return res.status(201).send("Recipient Created!");

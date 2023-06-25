@@ -25,7 +25,6 @@ router.post('/review', reviews.createReview);
 router.post('/history/:id', historyContoller.postHistory);
 router.get('/histories/:id', historyContoller.getHistory);
 
-router.post('/user/', usersController.addUser);
 router.put('/user/', usersController.editUser);
 router.get('/user/', usersController.getUser);
 router.delete('/user/', usersController.deleteUser);
@@ -39,7 +38,6 @@ router.post('/user/image', imageController.postImage);
 router.put('/user/image', imageController.editImage);
 router.get('/user/image/', imageController.getImage);
 
-router.get('/login/', authController.login);
 router.get('/logout/', authController.logout);
 
 router.post('/user/healthgoals', goalsController.addGoal);
