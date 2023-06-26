@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+const bcrypt = require('bcryptjs');
+
 const { Schema } = mongoose;
 
 const recipientSchema = new Schema({
@@ -50,6 +52,14 @@ const recipientSchema = new Schema({
   }],
 
 }, { timestamps: true });
+
+recipientSchema.pre('save', async function(next){
+  const user = this
+  if(user.isModified('password')){
+    user.password = await bcrypt.hash(user.password, 10)
+  }
+  next()
+})
 
 module.exports = mongoose.model('Recipient', recipientSchema);
 

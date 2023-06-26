@@ -30,7 +30,6 @@ router.get('/user/', usersController.getUser);
 router.delete('/user/', usersController.deleteUser);
 
 router.post('/history/', historyContoller.postHistory);
-router.post('/user/', usersController.addUser);
 router.put('/user/', usersController.editUser);
 router.get('/user/', usersController.getUser);
 

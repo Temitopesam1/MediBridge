@@ -1,13 +1,10 @@
-import Recipient from '../models/recipientSchema';
-import Provider from '../models/providerSchema';
 import authController from './auth';
-const bcrypt = require('bcryptjs');
 
-
-let hshpsswrd;
 
 
 class UsersController{
+
+
   async getUser(req, res) {
     const user = await authController.authenticate(req);
     if (user) {
@@ -16,93 +13,16 @@ class UsersController{
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  /*route to add new recipient*/
-  async addUser(req, res){
-    if (req.body.provider){
-      const { name, age, gender, password, address, phoneNumber, email, licenseNumber, specialization, department, practiceAddress, charges } = req.body;
-      hshpsswrd = await bcrypt.hash(password, 10);
-      try {
-        const user = new Provider({
-          name,
-          age,
-          gender,
-          address,
-          phoneNumber,
-          email,
-          licenseNumber,
-          specialization,
-          department,
-          practiceAddress,
-          charges,
-          password: hshpsswrd
-        });
-        await user.save();
-        return res.status(201).send("Provider Created!");
-      } 
-      catch(error){
-        console.log(error.message);
-        return res.status(400).json({ 'Error saving user': error })
-      }
-    }
-    const { name, age, gender, password, address, phoneNumber, email, isSmoking, isHypertensive, isDiabetic } = req.body;
-    hshpsswrd = await bcrypt.hash(password, 10);
-    try{
-      const user = new Recipient({
-        name,
-        age,
-        gender,
-        address,
-        phoneNumber,
-        email,
-        isSmoking,
-        isHypertensive,
-        isDiabetic,
-        password: hshpsswrd
-      });
-      await user.save();
-      return res.status(201).send("Recipient Created!");
-    } 
-    catch(error){
-      console.log(error);
-      return res.status(400).json({ 'Error saving user': error })
-    }
-  }
 
   /*route to update user */
   async editUser(req, res){
     const user = await authController.authenticate(req);
     if (user) {
-      if(user.hasOwnProperty('specialization')){
-        console.log('Updating recipient');
-        try{
-          await Provider.findOneAndUpdate(
-            {
-              _id: id,
-            },
-            req.body,
-            {
-              new: true,
-              runValidators: true,
-            }
-          )
-          return res.status(200).send("Recipient updated!");
-        } catch(error) {
-          return res.status(400).json({ 'Error saving user': error });
-        }
-      }
       try{
-        await Recipient.findOneAndUpdate(
-          {
-            _id: id,
-          },
-          req.body,
-          {
-            new: true,
-            runValidators: true,
-          }
-        )
-        return res.status(200).send("Provider updated!");
-      } catch(error){
+        Object.assign(user, req.body);
+        await user.save();
+        return res.status(200).send("User updated!");
+      } catch(error) {
         return res.status(400).json({ 'Error saving user': error });
       }
     }
@@ -113,21 +33,12 @@ class UsersController{
   async deleteUser(req, res){
     const user = await authController.authenticate(req);
     if (user) {
-      if(user.hasOwnProperty('specialization')){
-        try{
-          await Provider.deleteOne({ _id: id })
-          console.log('Deleted provider');
-          return res.status(204).end("user deleted!");
-        } catch(error){
-          res.status(400).json({ 'Could not delete user': error });
-        }
-      }
       try{
-        await Recipient.deleteOne({ _id: id })
-        console.log('Deleted recipient');
+        await user.remove();
+        console.log('Deleted provider');
         return res.status(204).end("user deleted!");
       } catch(error){
-        return res.status(400).json({ 'Could not delete user': error });
+        res.status(400).json({ 'Could not delete user': error });
       }
     }
     return res.status(401).json({ error: 'Unauthorized' });

@@ -5,7 +5,6 @@ const bodyparser = require('body-parser');
 import router from './routes/index';
 import connectDB from './utils/db';
 import cors from 'cors';
-import usersController from './controllers/usersControllers';
 import authController from './controllers/auth';
 import sessionMiddleware from './utils/session';
 
@@ -25,7 +24,7 @@ app.use(authController.jwtAuthenticationMiddleware);
 app.use(cookieParser());
 
 
-app.post('/register/', usersController.addUser);
+app.post('/register/', authController.addUser);
 app.get('/login', authController.login);
 app.use('/', authController.isAuthenticatedMiddleware, router);
 const port = process.env.PORT || 3000;
