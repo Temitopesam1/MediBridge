@@ -27,9 +27,24 @@ const Form = styled.form`
   flex-direction: column;
 `;
 
+
 const FormGroup = styled.div`
   margin-bottom: 20px;
 `;
+
+// const Label = styled.label`
+//   font-weight: bold;
+//   margin-top: 10px;
+// `;
+
+// const Span = styled.span`
+//   font-size: 12px;
+// `;
+
+// const CheckboxContainer = styled.div`
+//   margin-bottom: 4px;
+//   font-family: Arial;
+// `;
 
 const Input = styled.input`
   padding: 10px;
@@ -69,26 +84,14 @@ const Button = styled.button`
 
 function PatientRegistrationForm() {
   const [registerForm, setRegisterForm] = useState({
-   fullName: '',
-   age:'',
+    fullName: '',
+    age:'',
     gender: '',
     phoneNumber: '',
     email: '',
+    password: '',
     address: '',
     job: '',
-    medicalConditions: '',
-    surgeries: '',
-    medications: '',
-    allergies: '',
-    familyHistory: '',
-    insuranceProvider: '',
-    policyNumber: '',
-    paymentMethod: '',
-    emergencyContactName: '',
-    emergencyContactRelationship: '',
-    emergencyContactPhone: '',
-    preferredPhysician: '',
-    preferredHospital: '', 
   });
   const [error, setError] = useState('');
   //const navigate = useNavigate();
@@ -97,37 +100,33 @@ function PatientRegistrationForm() {
     setRegisterForm({ ...registerForm, [event.target.name]: event.target.value });
   };
 
+  // const handleCheckboxChange = (e) => {
+  //   const { name, checked } = e.target;
+  //   setRegisterForm((prevFormData) => ({
+  //     ...prevFormData,
+  //     [name]: checked ? [...prevFormData[name], e.target.value] : prevFormData[name].filter((value) => value !== e.target.value),
+  //   }));
+  // };
+
+
   const handleRegisterSubmit = (event) => {
     event.preventDefault();
 
     // Validate inputs
     if (
-      !registerForm.username ||
+      !registerForm.fullName ||
       !registerForm.password ||
       !registerForm.email ||
       !registerForm.age ||
       !registerForm.gender ||
       !registerForm.phoneNumber ||
       !registerForm.job ||
-      !registerForm.address ||
-      !registerForm.medicalConditions ||
-      !registerForm.surgeries ||
-      !registerForm.medications ||
-      !registerForm.allergies ||
-      !registerForm.familyHistory ||
-      !registerForm.insuranceProvider ||
-      !registerForm.policyNumber ||
-      !registerForm.paymentMethod ||
-      !registerForm.preferredHospital ||
-      !registerForm.preferredPhysician ||
-      !registerForm.emergencyContactName ||
-      !registerForm.emergencyContactPhone ||
-      !registerForm.emergencyContactRelationship
+      !registerForm.address
     ) {
-      setError('Please fill in all the fields.');
+      setError('Please fill all fields!');
       return;
     }
-
+    console.log(registerForm);
     // Post the form data to the backend
     fetch('https://medibridge.onrender.com/register', {
       method: 'POST',
@@ -143,25 +142,13 @@ function PatientRegistrationForm() {
         // Reset the form
         setRegisterForm({
           fullName: '',
-          age: '',
+          age:'',
           gender: '',
           phoneNumber: '',
           email: '',
+          password: '',
           address: '',
           job: '',
-          medicalConditions: '',
-          surgeries: '',
-          medications: '',
-          allergies: '',
-          familyHistory: '',
-          insuranceProvider: '',
-          policyNumber: '',
-          paymentMethod: '',
-          emergencyContactName: '',
-          emergencyContactRelationship: '',
-          emergencyContactPhone: '',
-          preferredPhysician: '',
-          preferredHospital: '',
         });
         setError('');
       })
@@ -180,8 +167,8 @@ function PatientRegistrationForm() {
         <FormGroup>
           <Input
             type="text"
-            name="username"
-            value={registerForm.username}
+            name="fullName"
+            value={registerForm.fullName}
             placeholder='Full Name'
             onChange={handleRegisterFormChange}
           />
@@ -230,20 +217,42 @@ function PatientRegistrationForm() {
           onChange={handleRegisterFormChange}
           />
         </FormGroup>
-        <FormGroup>
+        {/* <Label>Medical Condition:</Label>
+        <CheckboxContainer>
           <Input
-          type="text"
-          name="address"
-          placeholder="Address"
-          value={registerForm.address}
-          onChange={handleRegisterFormChange}
+            type="checkbox"
+            name="medicalCondition"
+            value="Hypertensive"
+            checked={registerForm.medicalCondition.includes('Hypertensive')}
+            onChange={handleCheckboxChange}
           />
-        </FormGroup>
+          <Span>Hypertensive</Span>
+        </CheckboxContainer>
+        <CheckboxContainer>
+          <Input
+            type="checkbox"
+            name="medicalCondition"
+            value="Diabetic"
+            checked={registerForm.medicalCondition.includes('Diabetic')}
+            onChange={handleCheckboxChange}
+          />
+          <Span>Diabetic</Span>
+        </CheckboxContainer>
+        <CheckboxContainer>
+          <Input
+            type="checkbox"
+            name="medicalCondition"
+            value="Smoking"
+            checked={registerForm.medicalCondition.includes('Smoking')}
+            onChange={handleCheckboxChange}
+          />
+          <Span>Smoking</Span>
+          </CheckboxContainer>
         <FormGroup>
           <Input
           type="text"
           name="job"
-          placeholder="Job"
+          placeholder="Job *"
           value={registerForm.job}
           onChange={handleRegisterFormChange}
           />
@@ -251,27 +260,9 @@ function PatientRegistrationForm() {
         <FormGroup>
         <Input
           type="text"
-          name="medicalConditions"
-          placeholder="Medical Conditions"
-          value={registerForm.medicalConditions}
-          onChange={handleRegisterFormChange}
-        />
-        </FormGroup>
-        <FormGroup>
-        <Input
-          type="text"
           name="surgeries"
           placeholder="Surgeries"
           value={registerForm.surgeries}
-          onChange={handleRegisterFormChange}
-        />
-        </FormGroup>
-        <FormGroup>
-        <Input
-          type="text"
-          name="medications"
-          placeholder="Medications"
-          value={registerForm.medications}
           onChange={handleRegisterFormChange}
         />
         </FormGroup>
@@ -310,61 +301,7 @@ function PatientRegistrationForm() {
           value={registerForm.policyNumber}
           onChange={handleRegisterFormChange}
         />
-        </FormGroup>
-        <FormGroup>
-        <Input
-          type="text"
-          name="paymentMethod"
-          placeholder="Payment Method"
-          value={registerForm.paymentMethod}
-          onChange={handleRegisterFormChange}
-        />
-        </FormGroup>
-        <FormGroup>
-        <Input
-          type="text"
-          name="emergencyContactName"
-          placeholder="Emergency Contact Name"
-          value={registerForm.emergencyContactName}
-          onChange={handleRegisterFormChange}
-        />
-        </FormGroup>
-        <FormGroup>
-        <Input
-          type="text"
-          name="emergencyContactRelationship"
-          placeholder="Emergency Contact Relationship"
-          value={registerForm.emergencyContactRelationship}
-          onChange={handleRegisterFormChange}
-        />
-        </FormGroup>
-        <FormGroup>
-        <Input
-          type="text"
-          name="emergencyContactPhone"
-          placeholder="Emergency Contact Phone Number"
-          value={registerForm.emergencyContactPhone}
-          onChange={handleRegisterFormChange}
-        />
-        </FormGroup>
-        <FormGroup>
-        <Input
-          type="text"
-          name="preferredPhysician"
-          placeholder="Preferred Physician"
-          value={registerForm.preferredPhysician}
-          onChange={handleRegisterFormChange}
-        />
-        </FormGroup>
-        <FormGroup>
-        <Input
-          type="text"
-          name="preferredHospital"
-          placeholder="Preferred Hospital"
-          value={registerForm.preferredHospital}
-          onChange={handleRegisterFormChange}
-        />
-        </FormGroup>
+        </FormGroup> */}
         {error && <Error>{error}</Error>}
         <Button type="submit">Register</Button>
       </Form>
