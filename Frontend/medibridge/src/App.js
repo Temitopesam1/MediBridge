@@ -1,29 +1,43 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-//import LandingPage from './pages/LandingPage';
+import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import styled from 'styled-components';
-import { Helmet } from 'react-helmet';
-import Icon from './assets/images/favicon.ico';
 
-const Main = styled.main`
-  color: black;
-  `;
+
+import LoginForm from './pages/Login';
+import DoctorRegistrationForm from './components/Form/DoctorRegister';
+import PatientRegistrationForm from './components/Form/PatientRegister';
+import ProfileData from './pages/PersonalDashboard';
+import DoctorReviews from './pages/DoctorsReview';
+import Messages from './pages/Messages';
+import Appointments from './pages/Appointments';
+import LandingPage from './pages/LandingPage';
+import RegistrationPageContainer from './components/RegisterAddon/RegistrationPageContainer';
+import Footer from "./components/Footer";
+
+
 
 const App = () => {
   return (
-    <>
-    <Helmet>
-      <title>MediBridge</title>
-      <meta name="description" content="A Healthcare App" />
-      <link rel="icon" type="image/png" href={Icon} />
-    </Helmet>
-    <Main>
-      <Router>
-        <Navbar />
-      </Router>
-    </Main>
-    </>
+    <div>
+
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route
+          path="/registration"
+          element={<RegistrationPageContainer />
+          }
+        />
+        <Route path="/registration/doctor-registration" element={<DoctorRegistrationForm />} />
+        <Route path="/registration/patient-registration" element={<PatientRegistrationForm />} />
+        <Route path="/dashboard" element={<ProfileData />} />
+        <Route path="/doctor-reviews" element={<DoctorReviews />} />
+        <Route path="/messages" element={<Messages />} />
+        <Route path="/appointment" element={<Appointments />} />
+      </Routes>
+      <Footer />
+    </div>
   );
 }
 

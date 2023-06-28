@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-//import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Logo from '../../assets/images/newLogo.jpeg';
+import axios from '../../Utils/axioss';
 
 const FormContainer = styled.div`
   max-width: 400px;
@@ -94,7 +95,7 @@ function PatientRegistrationForm() {
     job: '',
   });
   const [error, setError] = useState('');
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleRegisterFormChange = (event) => {
     setRegisterForm({ ...registerForm, [event.target.name]: event.target.value });
@@ -107,6 +108,19 @@ function PatientRegistrationForm() {
   //     [name]: checked ? [...prevFormData[name], e.target.value] : prevFormData[name].filter((value) => value !== e.target.value),
   //   }));
   // };
+
+  const clearForm =  ()=>{
+    setRegisterForm({
+      fullName: '',
+      age:'',
+      gender: '',
+      phoneNumber: '',
+      email: '',
+      password: '',
+      address: '',
+      job: '',
+    });
+  }
 
 
   const handleRegisterSubmit = (event) => {
@@ -128,28 +142,13 @@ function PatientRegistrationForm() {
     }
     console.log(registerForm);
     // Post the form data to the backend
-    fetch('https://medibridge.onrender.com/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(registerForm),
-    })
+    axios.post('register', JSON.stringify(registerForm))
       .then((response) =>
       console.log(response))
       .then((data) => {
         console.log(data);
         // Reset the form
-        setRegisterForm({
-          fullName: '',
-          age:'',
-          gender: '',
-          phoneNumber: '',
-          email: '',
-          password: '',
-          address: '',
-          job: '',
-        });
+        clearForm()
         setError('');
       })
       .catch((error) => {
@@ -157,6 +156,8 @@ function PatientRegistrationForm() {
         setError('Error registering user.');
       });
   };
+
+
 
   return (
     <FormContainer>
