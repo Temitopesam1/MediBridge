@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 //import LandingPage from './pages/LandingPage';
 import Navbar from './components/Navbar';
 import styled from 'styled-components';
@@ -7,8 +8,6 @@ import Icon from './assets/images/favicon.ico';
 
 const Main = styled.main`
   color: black;
-  width: 100vw;
-  height: 100vh;
   `;
 
 const App = () => {
@@ -20,7 +19,9 @@ const App = () => {
       <link rel="icon" type="image/png" href={Icon} />
     </Helmet>
     <Main>
-      <Navbar />
+      <Router>
+        <Navbar />
+      </Router>
     </Main>
     </>
   );

@@ -1,16 +1,29 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+//import PersonalDashboard from './PersonalDashboard';
+//import { AuthContext } from '../components/Auth/AuthContext';
+import Logo from '../assets/images/newLogo.jpeg';
+import axios from 'axios';
+
 
 const FormContainer = styled.div`
   max-width: 400px;
   margin: 0 auto;
   padding: 20px;
-  border: 1px solid #ccc;
   border-radius: 5px;
 `;
 
-const Title = styled.h2`
-  text-align: center;
+const LogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const LogoImage = styled.img`
+  width: 150px;
+  height: 50px;
+  margin: 0;
+  position: relative;
 `;
 
 const Form = styled.form`
@@ -19,18 +32,18 @@ const Form = styled.form`
 `;
 
 const FormGroup = styled.div`
+  position: relative;
   margin-bottom: 20px;
-`;
-
-const Label = styled.label`
-  margin-bottom: 5px;
-  font-weight: bold;
 `;
 
 const Input = styled.input`
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+
+  &:first-child {
+    margin: 0;
+  }
 `;
 
 const Error = styled.div`
@@ -40,16 +53,24 @@ const Error = styled.div`
 
 const Button = styled.button`
   padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
+  background: linear-gradient(to left, #4776E6, #8e54e9);
+  width: 180px;
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
+  padding: 0.4rem;
   cursor: pointer;
+
+  &:hover {
+    background: #ccc;
+  }
 `;
 
-function LoginForm() {
+export default function LoginForm({ setIsLoggedIn }) {
+  //const {  setIsLoggedIn } = useContext(AuthContext);
+  const navigate = useNavigate()
   const [loginForm, setLoginForm] = useState({
-    username: '',
+    email: '',
     password: '',
   });
   const [error, setError] = useState('');
@@ -58,58 +79,71 @@ function LoginForm() {
     setLoginForm({ ...loginForm, [event.target.name]: event.target.value });
   };
 
-  const handleLoginSubmit = (event) => {
-    event.preventDefault();
-
-    // Validate inputs
-    if (!loginForm.username || !loginForm.password) {
-      setError('Please fill in all the fields.');
-      return;
+  const handleLoginSubmit = (event, setIsLoggedIn) => {
+  event.preventDefault();
+  // Validate inputs
+  if (!loginForm.email || !loginForm.password) {
+    setError('Please fill in all the fields.');
+    return;
+  }
+  const userValues = `${loginForm.email}:${loginForm.password}`;
+  const encoded = btoa(userValues);
+  const headers= {
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${encoded}`,
     }
-
-    // Post the form data to the backend
-    fetch('/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(loginForm),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        // Reset the form
-        setLoginForm({
-          username: '',
-          password: '',
-        });
-        setError('');
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        setError('Error logging in.');
+  // Post the form data to the backend
+  axios.get('https://medibridge.onrender.com/login', {
+    headers,
+  })
+    .then((response) =>{
+      console.log(response);
+      const data = response.data;
+      console.log(data);
+      const axiosToken = data.accessToken;
+      localStorage.setItem('token', axiosToken);
+      console.log(data.accessToken);
+      console.log(axiosToken);
+      // Reset the form
+      setLoginForm({
+        email: '',
+        password: '',
       });
-  };
+      setError('');
+
+      // Assuming the login is successful and you receive an authentication token
+      // Update the authentication state and redirect the user
+      if (data.accessToken) {
+        navigate('/dashboard');
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      setError('Error logging in.');
+    });
+};
 
   return (
     <FormContainer>
-      <Title>Login Form</Title>
-      <Form onSubmit={handleLoginSubmit}>
+      <LogoContainer>
+        <LogoImage src={Logo} alt='Logo Image' />
+      </LogoContainer>
+      <Form onSubmit={(event) => handleLoginSubmit(event, setIsLoggedIn)}>
         <FormGroup>
-          <Label>Username:</Label>
           <Input
-            type="text"
-            name="username"
-            value={loginForm.username}
+            type="email"
+            name="email"
+            value={loginForm.email}
+            placeholder='Enter Email'
             onChange={handleLoginFormChange}
           />
         </FormGroup>
         <FormGroup>
-          <Label>Password:</Label>
           <Input
             type="password"
             name="password"
             value={loginForm.password}
+            placeholder='Enter Password'
             onChange={handleLoginFormChange}
           />
         </FormGroup>
@@ -119,5 +153,3 @@ function LoginForm() {
     </FormContainer>
   );
 }
-
-export default LoginForm;
