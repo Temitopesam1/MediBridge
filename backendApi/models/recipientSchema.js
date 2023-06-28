@@ -15,13 +15,6 @@ const recipientSchema = new Schema({
     }
   },
   gender: { type: String, required: true },
-  address: { type: String, required: true },
-  medicalConditions: { type: String, default: "None" },
-  surgeries: { type: String, default: "None" },
-  allergies: { type: String, default: "None" },
-  insuranceProvider: { type: String, default: "None" },
-  policyNumber: { type: String, default: "None" },
-  job: { type: String, required: true },
   phoneNumber: { type: String, required: true, minlength: 11 },
   email:{
     type: String,
@@ -46,9 +39,16 @@ const recipientSchema = new Schema({
       }
     }
   },
-  isSmoking: { type: Boolean, required: true},
-  isHypertensive: { type: Boolean, required: true},
-  isDiabetic: { type: Boolean, required: true },
+  address: { type: String, required: true },
+  job: { type: String, required: true },
+  surgeries: { type: Array, default: "None" },
+  allergies: { type: String, default: "None" },
+  familyHistory: { type: String, default: "None" },
+  insuranceProvider: { type: String, default: "None" },
+  policyNumber: { type: String, default: "None" },
+  isSmoking: { type: Boolean, default: false },
+  isHypertensive: { type: Boolean, default: false },
+  isDiabetic: { type: Boolean, default: false },
   image: { type: String, default: "None" },
   emergencyContact : [{
     name: { type: String, required: true },

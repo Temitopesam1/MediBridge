@@ -16,8 +16,6 @@ const providerSchema = new Schema({
   },
   image: { type: String, default: "None" },
   charges: {type: String, required: true },
-  phoneNumber: { type: String, required: true, minlength: 11},
-  email: { type: String, required: true, unique: true },
   password: {
     type: String, required: true, trim: true, minlength: 7,
     validate(value){
@@ -30,21 +28,34 @@ const providerSchema = new Schema({
       }
     }
   },
-  gender: { type: String, required: true },
-  address: { type: String, required: true },
+  email:{
+    type: String,
+    required: true,
+    unique:true,
+    trim: true,
+    validate(value){
+      if(!validator.isEmail(value)){
+        throw new Error('Email is invalid!')
+      }
+    }
+  },
+  specialty: { type: String, required: true },
   licenseNumber: { type: String, required: true, unique: true },
   affiliation: { type: String, default: "None" },
-  education: { type: String, required: true },
   experience: { type: String, default: "None" },
+  education: { type: String, required: true },
   biography: { type: String, default: "None" },
+  contactNumber: { type: String, required: true, minlength: 11},
+  officeAddress: { type: String, required: true },
   availability: { type: String, required: true },
   acceptedInsurance: { type: String, default: "None" },
+  gender: { type: String, required: true },
   languages: { type: Array, required: true },
+  areasOfExpertise: { type: Array, default: "None" },
   professionalMembership: { type: String, default: "None" },
   researchPublication: { type: String, default: "None" },
-  specialty: { type: String, required: true },
+  homeAddress: { type: String, required: true },
   department: { type: String, required: true },
-  officeAddress: { type: String, required: true },
   averageRating: { type: Number, default: 0 },
   appointments: [{
     patient: {
