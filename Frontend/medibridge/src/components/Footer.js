@@ -6,7 +6,7 @@ const Footerbar = styled.div`
     position: relative;
     isolation: isolate;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: flex-start;
     padding: 0px;
     boxSizing: border-box;
