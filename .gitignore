@@ -17,16 +17,17 @@ calender event format:
 
 patient post:
 {
-    "name": "Shae Nel",
-    "age": 25,
-    "gender": "female",
-    "address": "Abuja, Nigeria",
-    "phoneNumber":"23456778909",
-    "email": "shae@gmail.com",
-    "password": "shae",
-    "isSmoking": true,
-    "isHypertensive": true,
-    "isDiabetic":false
+  "fullName": "Xander Cage",
+  "age": 0,
+  "gender": "male",
+  "address": "Edo, Nigeria",
+  "job": "weldering",
+  "phoneNumber": "09876543211",
+  "email": "xander@gmail.com",
+  "password": "xander1",
+  "isSmoking": true,
+  "isHypertensive": true,
+  "isDiabetic": false
 }
 
 review post:
@@ -37,19 +38,22 @@ review post:
 
 doctor post:
 {
-    "name": "Chris Hemsworth",
-    "age": 30,
-    "gender": "male",
-    "password": "chris",
-    "address": "Lagos, Nigeria",
-    "phoneNumber": 11112345677,
-    "email": "chris@gmail.com",
-    "licenseNumber": 345983765432,
-    "specialization": "gynaecology",
-    "department": "whatever",
-    "practiceAddress": "Maryland, US",
-    "charges": "$205",
-    "provider": true
+  "fullName": "Jamie Carraghar",
+  "age": 50,
+  "charges": "$200",
+  "phoneNumber": "09876543212",
+  "email": "jamie@gmail.com",
+  "password": "jamie12",
+  "gender": "male",
+  "address": "Imo, Nigeria",
+  "licenseNumber": "098765432sdfgh",
+  "education": "Bachelor of Science",
+  "availability": "12:00 - 5:00 pm",
+  "languages": ["Yoruba", "English"],
+  "specialty": "Dentistry",
+  "department": "Dental",
+  "officeAddress": "Florida, US",
+  "provider": true
 }
 
 history post:

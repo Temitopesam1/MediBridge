@@ -1,11 +1,11 @@
 import Recipient from '../models/recipientSchema';
 import Provider from '../models/providerSchema';
 import njwt from 'njwt';
-require('dotenv').config();
+const secureRandom = require('secure-random');
 const bcrypt = require('bcryptjs');
 
 
-const { APP_SECRET } = process.env;
+const APP_SECRET = secureRandom(256, {type: 'Buffer'});
 let user;
 
 function encodeToken(tokenData) {

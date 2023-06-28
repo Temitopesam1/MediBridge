@@ -29,7 +29,7 @@ app.get('/login', authController.login);
 app.use('/', authController.isAuthenticatedMiddleware, router);
 const port = process.env.PORT || 3000;
 
-app.get('/', (req, res)=>{
+app.get('/', (req, res)=> {
   return res.status(200).send("Hello World");
 })
 

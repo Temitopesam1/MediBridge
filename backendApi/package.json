@@ -38,9 +38,11 @@
     "mongoose": "^6.0.4",
     "njwt": "^2.0.0",
     "redis": "^4.6.7",
+    "secure-random": "^1.1.2",
     "sha1": "^1.1.1",
     "socket.io": "^4.6.2",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "validator": "^13.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.0",

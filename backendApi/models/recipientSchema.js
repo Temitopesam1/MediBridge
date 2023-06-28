@@ -1,20 +1,60 @@
 import mongoose from "mongoose";
 const bcrypt = require('bcryptjs');
+const validator = require('validator')
 
 const { Schema } = mongoose;
 
 const recipientSchema = new Schema({
-  name: { type: String, required: true },
-  age: { type: Number, required: true },
+  fullName: { type: String, required: true },
+  age: { 
+    type: Number, required: true,
+    validate(value){
+      if(value < 0){
+        throw new Error('Age must be a positive number')
+      }
+    }
+  },
   gender: { type: String, required: true },
   address: { type: String, required: true },
-  phoneNumber: { type: String, required: true },
-  email: { type: String, required: true, unique: true, lowercase: true },
-  password: {type: String, required: true },
+  medicalConditions: { type: String, default: "None" },
+  surgeries: { type: String, default: "None" },
+  allergies: { type: String, default: "None" },
+  insuranceProvider: { type: String, default: "None" },
+  policyNumber: { type: String, default: "None" },
+  job: { type: String, required: true },
+  phoneNumber: { type: String, required: true, minlength: 11 },
+  email:{
+    type: String,
+    required: true,
+    unique:true,
+    trim: true,
+    validate(value){
+      if(!validator.isEmail(value)){
+        throw new Error('Email is invalid!')
+      }
+    }
+  },
+  password: {
+    type: String, required: true, trim: true, minlength: 7,
+    validate(value){
+      if(validator.isEmpty(value)){
+        throw new Error('Please enter your password!')
+      }else if(validator.equals(value.toLowerCase(),"password")){
+        throw new Error('Password is invalid!')
+      }else if(validator.contains(value.toLowerCase(), "password")){
+        throw new Error('Password should not contain password!')
+      }
+    }
+  },
   isSmoking: { type: Boolean, required: true},
   isHypertensive: { type: Boolean, required: true},
   isDiabetic: { type: Boolean, required: true },
-  image: { type: String },
+  image: { type: String, default: "None" },
+  emergencyContact : [{
+    name: { type: String, required: true },
+    relationship: { type: String, required: true },
+    phoneNumber: { type: String, required: true }
+  }],
   history: [{
     provider: {
       type: mongoose.Schema.Types.ObjectId,
