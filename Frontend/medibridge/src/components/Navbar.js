@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './Navbar.css'
 import { Route, Routes, Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import LoginForm from '../pages/Login';
@@ -7,46 +8,12 @@ import PatientRegistrationForm from './Form/PatientRegister';
 import ProfileData from '../pages/PersonalDashboard';
 import DoctorReviews from '../pages/DoctorsReview';
 import Messages from '../pages/Messages';
+import Logout from '../pages/Logout';
 //import MedicalArticles from './Articles';
 import Appointments from '../pages/Appointments';
 import LandingPage from '../pages/LandingPage';
 
-const Nav = styled.nav`
-  background: ${(props) => props.theme.navbarBackground};
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 100%;
-  color: white;
-`;
 
-const NavLinks = styled.ul`
-  display: flex;
-  list-style: none;
-  color: white;
-`;
-
-const NavLink = styled.li`
-  margin-right: 1rem;
-  color: white;
-  text-decoration: none;
-  a{
-    margin-left: 20px;
-    color: #43014a;
-    text-decoration: none;
-
-    &:hover {
-      color: #f9d7fc;
-    }
-
-    &:active {
-      color: #066f80;
-    }
-  }
-`;
 
 const RegistrationPageContainer = styled.div`
   display: flex;
@@ -105,38 +72,42 @@ const navigate = useNavigate();
   
   return (
     <>
-      <Nav>
-          <NavLinks>
-            <NavLink>
+      <nav>
+          <ul>
+            <li>
               <Link to="/">Home</Link>
-            </NavLink>
-            <NavLink>
+            </li>
+            <li>
               <Link to="/login">Login</Link>
-            </NavLink>
-            <NavLink>
+            </li>
+            <li>
+              <Link to="/logout">Logout</Link>
+            </li>
+            <li>
               <Link to="/registration">Register</Link>
-            </NavLink>
-            <NavLink>
+            </li>
+            <li>
               <Link to="/dashboard">Personal Dashboard</Link>
-            </NavLink>
-            <NavLink>
+            </li>
+            <li>
               <Link to="/doctor-reviews">Doctors Review</Link>
-            </NavLink>
-            <NavLink>
+            </li>
+            <li>
               <Link to="/messages">Messages</Link>
-            </NavLink>
+            </li>
             {/* <NavLink>
               <Link to="/medical-articles">Medical Articles</Link>
   </NavLink> */}
-            <NavLink>
+            <li>
               <Link to="/appointment">Appointments</Link>
-            </NavLink>
-          </NavLinks>
-        </Nav>
+            </li>
+          </ul>
+        </nav>
 
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginForm/>} />
+        <Route path="/logout" element={<Logout/>} />
         <Route
           path="/registration"
           element={

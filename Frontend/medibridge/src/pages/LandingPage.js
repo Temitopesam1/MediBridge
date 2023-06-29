@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 //import BackgroundImage from '../assets/images/MedicalBackground.jpg';
 import heroImage from '../assets/images/hero-image.jpg';
 import feature1 from '../assets/images/feature-1 (1).jpg';
@@ -8,19 +9,30 @@ import feature3 from '../assets/images/feature-3.jpg';
 import Logo from '../assets/images/Logo.jpeg';
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    navigate('/registration');
+  };
+
+  const handleLogin = () => {
+    navigate('/login')
+  }
+
   return (
     <Container>
       <Header>
         <LogoContainer>
           <LogoImage src={Logo} alt='Logo Image' />
           <LogoHeader>MediBridge App</LogoHeader>
+          <LoginButton onClick={handleLogin}>Login</LoginButton>
           </LogoContainer>
       </Header>
       <Hero>
         <HeroText>
           <Title>Transforming Healthcare</Title>
           <Subtitle>Bringing quality care to your fingertips</Subtitle>
-          <CTAButton>Get Started</CTAButton>
+          <CTAButton onClick={handleGetStarted}>Get Started</CTAButton>
         </HeroText>
         <HeroImage src={heroImage} alt='Hero Image' />
       </Hero>
@@ -72,6 +84,8 @@ const Header = styled.header`
 const LogoContainer = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const LogoHeader = styled.h1`
@@ -106,13 +120,40 @@ const Subtitle = styled.p`
 `;
 
 const CTAButton = styled.button`
-  padding: 12px 24px;
-  background-color: #007bff;
+  padding: 12px;
+  background: linear-gradient(to left, #4776E6, #8e54e9);
   color: #fff;
   font-size: 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+
+  &:hover {
+    background: blue;
+  }
+
+  &:active {
+    background: purple;
+  }
+`;
+
+const LoginButton = styled.button`
+  padding: 10px;
+  font-size: 10px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin-left: 200px;
+  background: linear-gradient(to left, #4776E6, #8e54e9);
+  cursor: pointer;
+
+  &:hover {
+    background: blue;
+  }
+
+  &:active {
+    background: purple;
+  }
 `;
 
 const HeroImage = styled.img`

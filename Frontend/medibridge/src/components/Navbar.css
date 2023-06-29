@@ -1,0 +1,32 @@
+nav{
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+ul {
+  display: flex;
+  list-style: none;
+}
+
+li {
+  margin-right: 1rem;
+  text-decoration: none;
+}
+a {
+    margin-left: 20px;
+    color: #43014a;
+    text-decoration: none;
+}
+
+a:hover {
+      color: #f9d7fc;
+    }
+
+a:active {
+      color: #066f80;
+    }
