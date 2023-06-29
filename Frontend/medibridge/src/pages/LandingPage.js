@@ -6,7 +6,6 @@ import heroImage from '../assets/images/hero-image.jpg';
 import feature1 from '../assets/images/feature-1 (1).jpg';
 import feature2 from '../assets/images/feature-2.jpg';
 import feature3 from '../assets/images/feature-3.jpg';
-import Logo from '../assets/images/Logo.jpeg';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -15,19 +14,8 @@ const LandingPage = () => {
     navigate('/registration');
   };
 
-  const handleLogin = () => {
-    navigate('/login')
-  }
-
   return (
     <Container>
-      <Header>
-        <LogoContainer>
-          <LogoImage src={Logo} alt='Logo Image' />
-          <LogoHeader>MediBridge App</LogoHeader>
-          <LoginButton onClick={handleLogin}>Login</LoginButton>
-          </LogoContainer>
-      </Header>
       <Hero>
         <HeroText>
           <Title>Transforming Healthcare</Title>
@@ -59,9 +47,6 @@ const LandingPage = () => {
           </FeatureDescription>
         </Feature>
       </Features>
-      <Footer>
-        <FooterText>© 2023 Healthcare App. All rights reserved.</FooterText>
-      </Footer>
     </Container>
   );
 };
@@ -72,30 +57,6 @@ const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px;
-`;
-
-const Header = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 40px;
-`;
-
-const LogoContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const LogoHeader = styled.h1`
-  font-size: 24px;
-  font-weight: bold;
-`;
-
-const LogoImage = styled.img`
-  width: 50px;
-  height: 80px;
 `;
 
 const Hero = styled.section`
@@ -126,25 +87,6 @@ const CTAButton = styled.button`
   font-size: 16px;
   border: none;
   border-radius: 4px;
-  cursor: pointer;
-
-  &:hover {
-    background: blue;
-  }
-
-  &:active {
-    background: purple;
-  }
-`;
-
-const LoginButton = styled.button`
-  padding: 10px;
-  font-size: 10px;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  margin-left: 200px;
-  background: linear-gradient(to left, #4776E6, #8e54e9);
   cursor: pointer;
 
   &:hover {
@@ -188,16 +130,6 @@ const FeatureTitle = styled.h3`
 
 const FeatureDescription = styled.p`
   font-size: 16px;
-`;
-
-const Footer = styled.footer`
-  text-align: center;
-  margin-top: 80px;
-`;
-
-const FooterText = styled.p`
-  font-size: 14px;
-  color: #999;
 `;
 
 export default LandingPage;

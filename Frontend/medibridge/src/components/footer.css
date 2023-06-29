@@ -1,0 +1,22 @@
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+}
+
+footer h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+footer p {
+  font-size: 14px;
+  margin: 0;
+}
+
+footer p::before {
+  margin-right: 5px;
+}
+

@@ -1,27 +1,13 @@
 import React from "react";
-import styled from "styled-components";
-
-const Footerbar = styled.div`
-    display: flex;
-    position: relative;
-    isolation: isolate;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 0px;
-    boxSizing: border-box;
-    height: 43px;
-    width: 846px;
-    margin: 30px 0px 0px 0px; 
-`
+import './footer.css';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
     return (
-        <Footerbar>
+        <footer>
             <h1>MediBridge</h1>
             <p>&copy; { currentYear }, MediBridge. All rights reserved</p>
-        </Footerbar>
+        </footer>
     );
 };
 

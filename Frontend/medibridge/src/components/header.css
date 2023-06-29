@@ -1,0 +1,37 @@
+header{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+header img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+header button {
+  padding: 10px;
+  font-size: 10px;
+  color: #fff;
+  align-self: flex-end;
+  border: none;
+  border-radius: 5px;
+  margin-left: 200px;
+  background: linear-gradient(to left, #4776E6, #8e54e9);
+  cursor: pointer;
+}
+
+header button:hover {
+    background: blue;
+  }
+
+header button:active {
+    background: purple;
+  }

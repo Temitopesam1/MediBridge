@@ -1,21 +1,20 @@
 import React from 'react';
-import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import './header.css'
+import Logo from '../assets/images/newLogo.jpeg';
 
-const Head = styled.main`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 50vw;
-    top: 0;
-`;
 
 const Header = () => {
+    const navigate = useNavigate();
+    const handleLogin = () => {
+    navigate('/login')
+  }
     return (
-        <Head>
-            <h3>MediBridge</h3>
-            <p>Your one-stop App for all your medical needs</p>
-        </Head>
+        <header>
+          <img src={Logo} alt='Logo' />
+          <h1>MediBridge App</h1>
+          <button onClick={handleLogin}>Login</button>
+      </header>
     );
 }
 

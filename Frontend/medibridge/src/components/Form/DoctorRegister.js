@@ -84,24 +84,21 @@ const Button = styled.button`
 
 function DoctorRegistrationForm() {
   const [registerForm, setRegisterForm] = useState({
-    username: '',
+    fullName: '',
+    age: '',
+    charges: '',
     password: '',
     email: '',
     specialty: '',
     licenseNumber: '',
-    affiliation: '',
-    experience: '',
     education: '',
-    biography: '',
     contactNumber: '',
     officeAddress: '',
     availability: '',
-    acceptedInsurance: '',
-    profilePicture: '',
-    languages: [],
-    areasOfExpertise: [],
-    professionalMemberships: '',
-    researchPublications: '',
+    gender: '',
+    homeAddress: '',
+    department: '',
+    areasOfExpertise: []
   });
   const [error, setError] = useState('');
 
@@ -122,15 +119,23 @@ function DoctorRegistrationForm() {
 
     // Validate inputs
     if (
-      !registerForm.username ||
+      !registerForm.fullName ||
       !registerForm.password ||
       !registerForm.email ||
       !registerForm.age ||
       !registerForm.gender ||
-      !registerForm.acceptedInsurance ||
-      !registerForm.affiliation
+      !registerForm.charges ||
+      !registerForm.homeAddress ||
+      !registerForm.officeAddress ||
+      !registerForm.availability ||
+      !registerForm.contactNumber ||
+      !registerForm.education ||
+      !registerForm.licenseNumber ||
+      !registerForm.specialty ||
+      !registerForm.areasOfExpertise ||
+      !registerForm.department
     ) {
-      setError('Please fill in all the fields.');
+      setError('Please fill all fields!');
       return;
     }
 
@@ -147,24 +152,22 @@ function DoctorRegistrationForm() {
         console.log(data);
         // Reset the form
         setRegisterForm({
-          username: '',
+          fullName: '',
+          age: '',
+          charges: '',
           password: '',
           email: '',
           specialty: '',
           licenseNumber: '',
-          affiliation: '',
-          experience: '',
           education: '',
-          biography: '',
-          provider: true,
           contactNumber: '',
           officeAddress: '',
           availability: '',
-          acceptedInsurance: '',
-          languages: [],
+          gender: '',
+          homeAddress: '',
+          department: '',
           areasOfExpertise: [],
-          professionalMemberships: '',
-          researchPublications: '',
+          provider: true
         });
         setError('');
       })
@@ -183,9 +186,9 @@ function DoctorRegistrationForm() {
         <FormGroup> 
           <Input
             type="text"
-            name="username"
-            value={registerForm.username}
-            placeholder='Enter Username'
+            name="fullName"
+            value={registerForm.fullName}
+            placeholder='Full Name'
             onChange={handleRegisterFormChange}
           />
         </FormGroup>
@@ -225,7 +228,7 @@ function DoctorRegistrationForm() {
           onChange={handleRegisterFormChange}
         />
         </FormGroup>
-        <FormGroup>
+        {/* <FormGroup>
         <Input
           type="text"
           name="affiliation"
@@ -242,7 +245,7 @@ function DoctorRegistrationForm() {
           value={registerForm.experience}
           onChange={handleRegisterFormChange}
         />
-        </FormGroup>
+        </FormGroup> */}
         <FormGroup>
         <Input
           type="text"
@@ -270,7 +273,7 @@ function DoctorRegistrationForm() {
           onChange={handleRegisterFormChange}
         />
         </FormGroup>
-        <FormGroup>
+        {/* <FormGroup>
         <Input
           type="text"
           name="acceptedInsurance"
@@ -284,10 +287,10 @@ function DoctorRegistrationForm() {
           type="text"
           name="profilePicture"
           placeholder="Profile Picture"
-          value={registerForm.profilePicture}
+          value={registerForm.gender}
           onChange={handleRegisterFormChange}
         />
-        </FormGroup>
+        </FormGroup> */}
         <FormGroup>
         <Textarea
           name="education"
@@ -296,7 +299,7 @@ function DoctorRegistrationForm() {
           onChange={handleRegisterFormChange}
         ></Textarea>
         </FormGroup>
-        <FormGroup>
+        {/* <FormGroup>
         <Textarea
           name="biography"
           placeholder="Professional Biography"
@@ -401,7 +404,7 @@ function DoctorRegistrationForm() {
             onChange={handleCheckboxChange}
           />
           <Span>Zulu</Span>
-          </CheckboxContainer>
+          </CheckboxContainer> */}
         <Label>Areas of Expertise:</Label>
         <CheckboxContainer>
           <Input

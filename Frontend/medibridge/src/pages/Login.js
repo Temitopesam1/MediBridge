@@ -4,7 +4,8 @@ import styled from 'styled-components';
 //import PersonalDashboard from './PersonalDashboard';
 //import { AuthContext } from '../components/Auth/AuthContext';
 import Logo from '../assets/images/newLogo.jpeg';
-import axios from 'axios';
+import axios from '../utils/axioss';
+//import getCurrentUser from '../Utils/getCurrentUser';
 
 
 const FormContainer = styled.div`
@@ -86,6 +87,13 @@ export default function LoginForm({ setIsLoggedIn }) {
     setError('Please fill in all the fields.');
     return;
   }
+
+  const clearForm = ()=>{
+    setLoginForm({
+      email: '',
+      password: '',
+    });
+  }
   const userValues = `${loginForm.email}:${loginForm.password}`;
   const encoded = btoa(userValues);
   const headers= {
@@ -93,22 +101,20 @@ export default function LoginForm({ setIsLoggedIn }) {
       'Authorization': `Basic ${encoded}`,
     }
   // Post the form data to the backend
-  axios.get('https://medibridge.onrender.com/login', {
+  axios.get('login', {
     headers,
   })
     .then((response) =>{
       console.log(response);
-      const data = response.data;
-      console.log(data);
+      // const data = response.data;
+
+      const {data} = response 
       const axiosToken = data.accessToken;
       localStorage.setItem('token', axiosToken);
-      console.log(data.accessToken);
-      console.log(axiosToken);
+
+      // localStorage.setItem("currentUser", JSON.stringify(res.data));
       // Reset the form
-      setLoginForm({
-        email: '',
-        password: '',
-      });
+      clearForm()
       setError('');
 
       // Assuming the login is successful and you receive an authentication token
@@ -118,7 +124,6 @@ export default function LoginForm({ setIsLoggedIn }) {
       }
     })
     .catch((error) => {
-      console.error('Error:', error);
       setError('Error logging in.');
     });
 };
