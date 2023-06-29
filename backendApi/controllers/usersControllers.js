@@ -8,7 +8,8 @@ class UsersController{
   async getUser(req, res) {
     const user = await authController.authenticate(req);
     if (user) {
-      return res.json({ user });
+      const { password, ...userData } = user;
+      return res.status(200).json({ userData });
     }
     return res.status(401).json({ error: 'Unauthorized' });
   }

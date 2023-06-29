@@ -46,9 +46,7 @@ const recipientSchema = new Schema({
   familyHistory: { type: String, default: "None" },
   insuranceProvider: { type: String, default: "None" },
   policyNumber: { type: String, default: "None" },
-  isSmoking: { type: Boolean, default: false },
-  isHypertensive: { type: Boolean, default: false },
-  isDiabetic: { type: Boolean, default: false },
+  medicalCondition: { type: Array, default: "None" },
   image: { type: String, default: "None" },
   emergencyContact : [{
     name: { type: String, required: true },
