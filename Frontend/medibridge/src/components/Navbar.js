@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import getCurrentUser from "../utils/getCurrentUser"
-import Logout from '../utils/logoutUser';
+import getCurrentUser from '../Utils/getCurrentUser';
+import Logout from '../Utils/logoutUser';
 import decode from "jwt-decode";
 import './Navbar.css';
 

@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import getCurrentUser from '../../utils/getCurrentUser';
+import getCurrentUser from '../../Utils/getCurrentUser';
 
 const ProfileForm = () => {
   const currentUser = getCurrentUser(); // Get the user information from local storage
 
   const [formData, setFormData] = useState({
-    name: currentUser.name || '',
+    name: currentUser.fullName || '',
     email: currentUser.email || '',
-    provider: currentUser.provider || false,
     age: currentUser.age || '',
-    address: currentUser.address || '',
+    address: currentUser.homeAddress || '',
+    contactNumber: currentUser.contactNumber || '',
+    gender: currentUser.gender || '',
   });
 
   const handleChange = (e) => {
@@ -29,7 +30,7 @@ const ProfileForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <label>
-        Name:
+        Full Name:
         <input
           type="text"
           name="name"
@@ -49,7 +50,27 @@ const ProfileForm = () => {
       </label>
       <br />
       <label>
-        Provider:
+        Age:
+        <input
+          type="checkbox"
+          name="age"
+          checked={formData.age}
+          onChange={handleChange}
+        />
+      </label>
+      <br />
+      <label>
+        Home Address:
+        <input
+          type="checkbox"
+          name="address"
+          checked={formData.address}
+          onChange={handleChange}
+        />
+      </label>
+      <br />
+      <label>
+        Contact Number:
         <input
           type="checkbox"
           name="provider"
@@ -58,7 +79,17 @@ const ProfileForm = () => {
         />
       </label>
       <br />
-      {formData.provider ? (
+      <label>
+        Gender:
+        <input
+          type="checkbox"
+          name="gender"
+          checked={formData.gender}
+          onChange={handleChange}
+        />
+      </label>
+      <br />
+      {formData.specialty ? (
         // Render additional fields for doctors
         <>
           <label>
@@ -72,11 +103,151 @@ const ProfileForm = () => {
           </label>
           <br />
           <label>
-            Hospital:
+            Practice Hospital:
             <input
               type="text"
               name="hospital"
               value={formData.hospital}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            License Number:
+            <input
+              type="text"
+              name="licenseNumber"
+              value={formData.licenseNumber}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Affiliation:
+            <input
+              type="text"
+              name="affiliation"
+              value={formData.affiliation}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Charge Per Session:
+            <input
+              type="text"
+              name="charges"
+              value={formData.charges}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Experience:
+            <input
+              type="text"
+              name="experience"
+              value={formData.experience}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Education And Qualifications:
+            <input
+              type="text"
+              name="education"
+              value={formData.education}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Biography:
+            <input
+              type="text"
+              name="biography"
+              value={formData.biography}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Office Address:
+            <input
+              type="text"
+              name="officeAddress"
+              value={formData.officeAddress}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Availability:
+            <input
+              type="text"
+              name="availability"
+              value={formData.availability}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Accepted Insurance:
+            <input
+              type="text"
+              name="acceptedInsurance"
+              value={formData.acceptedInsurance}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Languages:
+            <input
+              type="text"
+              name="languages"
+              value={formData.languages}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Area Of Expertise:
+            <input
+              type="text"
+              name="areaOfExpertise"
+              value={formData.areaOfExpertise}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Professional Memberships:
+            <input
+              type="text"
+              name="professionalMembership"
+              value={formData.professionalMembership}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Research Publications:
+            <input
+              type="text"
+              name="researchPublications"
+              value={formData.researchPublications}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Department:
+            <input
+              type="text"
+              name="department"
+              value={formData.department}
               onChange={handleChange}
             />
           </label>
@@ -86,21 +257,81 @@ const ProfileForm = () => {
         // Render additional fields for patients
         <>
           <label>
-            Address:
+            Job:
             <input
               type="text"
-              name="address"
-              value={formData.address}
+              name="job"
+              value={formData.job}
               onChange={handleChange}
             />
           </label>
           <br />
           <label>
-            Date of Birth:
+            Surgeries:
             <input
-              type="date"
-              name="dateOfBirth"
-              value={formData.dateOfBirth}
+              type="text"
+              name="surgeries"
+              value={formData.surgeries}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Allergies:
+            <input
+              type="text"
+              name="allergies"
+              value={formData.allergies}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Family History:
+            <input
+              type="text"
+              name="familyHistory"
+              value={formData.familyHistory}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Insurance Provider:
+            <input
+              type="text"
+              name="insuranceProvider"
+              value={formData.insuranceProvider}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Policy Number:
+            <input
+              type="text"
+              name="policyNumber"
+              value={formData.policyNumber}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Medical Condition:
+            <input
+              type="text"
+              name="medicalCondition"
+              value={formData.medicalCondition}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Emergency Contact:
+            <input
+              type="text"
+              name="emergencyContact"
+              value={formData.emergencyContact}
               onChange={handleChange}
             />
           </label>
