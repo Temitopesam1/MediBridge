@@ -15,7 +15,7 @@ const recipientSchema = new Schema({
     }
   },
   gender: { type: String, required: true },
-  phoneNumber: { type: String, required: true, minlength: 11 },
+  contactNumber: { type: String, required: true, minlength: 11 },
   email:{
     type: String,
     required: true,
@@ -39,7 +39,7 @@ const recipientSchema = new Schema({
       }
     }
   },
-  address: { type: String, required: true },
+  homeAddress: { type: String, required: true },
   job: { type: String, required: true },
   surgeries: { type: Array, default: "None" },
   allergies: { type: String, default: "None" },
