@@ -25,6 +25,7 @@ const Navbar = () => {
     e.preventDefault()
     Logout()
     setLogout(true)
+    navigate('/')
   }
 
 
@@ -35,6 +36,12 @@ const Navbar = () => {
           <li>
             <Link to={"/"}>Home</Link>
           </li>
+          <li>
+            <Link to={"/about-us"}>About Us</Link>
+          </li>
+          <li>
+            <Link to={"/articles"}>Articles</Link>
+          </li>
 
           {!currentUser ? (
               <ul>
@@ -43,12 +50,6 @@ const Navbar = () => {
               </li>
               <li>
                 <Link to={"/registration"}>Register</Link>
-              </li>
-              <li>
-                <Link to={"/about-us"}>About Us</Link>
-              </li>
-              <li>
-                <Link to={"/articles"}>Articles</Link>
               </li>
               </ul>
           ) : (

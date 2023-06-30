@@ -33,20 +33,6 @@ const FormGroup = styled.div`
   margin-bottom: 20px;
 `;
 
-// const Label = styled.label`
-//   font-weight: bold;
-//   margin-top: 10px;
-// `;
-
-// const Span = styled.span`
-//   font-size: 12px;
-// `;
-
-// const CheckboxContainer = styled.div`
-//   margin-bottom: 4px;
-//   font-family: Arial;
-// `;
-
 const Input = styled.input`
   padding: 10px;
   border: 1px solid #ccc;
@@ -88,36 +74,43 @@ function PatientRegistrationForm() {
     fullName: '',
     age:'',
     gender: '',
-    phoneNumber: '',
+    contactNumber: '',
     email: '',
     password: '',
-    address: '',
+    confirmPassword: '',
+    homeAddress: '',
     job: '',
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState({
+    fullName: '',
+    age:'',
+    gender: '',
+    contactNumber: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    homeAddress: '',
+    job: '',
+
+  });
+
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   const handleRegisterFormChange = (event) => {
     setRegisterForm({ ...registerForm, [event.target.name]: event.target.value });
   };
 
-  // const handleCheckboxChange = (e) => {
-  //   const { name, checked } = e.target;
-  //   setRegisterForm((prevFormData) => ({
-  //     ...prevFormData,
-  //     [name]: checked ? [...prevFormData[name], e.target.value] : prevFormData[name].filter((value) => value !== e.target.value),
-  //   }));
-  // };
 
   const clearForm =  ()=>{
     setRegisterForm({
       fullName: '',
       age:'',
       gender: '',
-      phoneNumber: '',
+      contactNumber: '',
       email: '',
       password: '',
-      address: '',
+      homeAddress: '',
       job: '',
     });
   }
@@ -127,32 +120,81 @@ function PatientRegistrationForm() {
     event.preventDefault();
 
     // Validate inputs
+
+    let error = {};
+    let isValid = true;
+
+    if (!registerForm.firstName) {
+      error.firstName = "Full name is required";
+      isValid = false;
+    }
+
+    if (!registerForm.email) {
+      error.email = "Email is required";
+      isValid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(registerForm.email)) {
+      error.email = "Invalid email address";
+      isValid = false;
+    }
+
+    if (!registerForm.password) {
+      error.password = "Password is required";
+      isValid = false;
+    } else if (
+      !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w\d\s:])([^\s]){8,}$/.test(
+        registerForm.password
+      )
+    ) {
+      error.password =
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one unique character";
+      isValid = false;
+    }
+
+    if (!registerForm.confirmPassword) {
+      error.confirmPassword = "Password is required";
+      isValid = false;
+    } else if (
+      !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w\d\s:])([^\s]){8,}$/.test(
+        registerForm.confirmPassword
+      )
+    ) {
+      error.password =
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one unique character";
+      isValid = false;
+    }
+    
+
+    if (registerForm.confirmPassword !== registerForm.password) {
+      error.confirmPassword = "Passwords do not match";
+      isValid = false;
+    }
+
     if (
       !registerForm.fullName ||
       !registerForm.password ||
       !registerForm.email ||
       !registerForm.age ||
       !registerForm.gender ||
-      !registerForm.phoneNumber ||
+      !registerForm.contactNumber ||
       !registerForm.job ||
-      !registerForm.address
+      !registerForm.homeAddress
     ) {
-      setError('Please fill all fields!');
+      error = 'Please fill all fields!';
       return;
     }
-    console.log(registerForm);
+    setError(error);
     // Post the form data to the backend
     axios.post('register', JSON.stringify(registerForm))
-      .then((response) =>
-      console.log(response))
       .then((data) => {
+        if (isValid) {
+        setSuccessMessage("Registration Successful!");
         navigate('/')
         // Reset the form
         clearForm()
         setError('');
+      }
       })
       .catch((error) => {
-        console.error('Error:', error);
         setError('Error registering user.');
       });
   };
@@ -164,6 +206,7 @@ function PatientRegistrationForm() {
       <LogoContainer>
         <LogoImage src={Logo} alt='Logo Image' />
       </LogoContainer>
+      {successMessage && <p>{successMessage}</p>}
       <Form onSubmit={handleRegisterSubmit}>
         <FormGroup>
           <Input
@@ -212,9 +255,9 @@ function PatientRegistrationForm() {
         <FormGroup>
           <Input
           type="text"
-          name="phoneNumber"
+          name="contactNumber"
           placeholder="Phone Number"
-          value={registerForm.phoneNumber}
+          value={registerForm.contactNumber}
           onChange={handleRegisterFormChange}
           />
         </FormGroup>
@@ -230,9 +273,9 @@ function PatientRegistrationForm() {
         <FormGroup>
           <Input
           type="text"
-          name="address"
+          name="homeAddress"
           placeholder="Address"
-          value={registerForm.address}
+          value={registerForm.homeAddress}
           onChange={handleRegisterFormChange}
           />
         </FormGroup>

@@ -67,7 +67,7 @@ const AboutUsPage = () => {
             </a>
           </li>
           <li>
-            <a href="mailto:temitopesam@gmail.com">
+            <a href="mailto:temitopesam5@gmail.com">
               <i className="fas fa-envelope"></i> Email 2
             </a>
           </li>

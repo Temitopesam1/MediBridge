@@ -1,5 +1,5 @@
 const getCurrentUser = () => {
-    return localStorage.getItem("userData");
+    return localStorage.getItem("token");
   };
   
 export default getCurrentUser;

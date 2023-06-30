@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-//import PersonalDashboard from './PersonalDashboard';
-//import { AuthContext } from '../components/Auth/AuthContext';
 import Logo from '../assets/images/newLogo.jpeg';
 import axios from '../Utils/axioss';
-//import getCurrentUser from '../Utils/getCurrentUser';
 
 
 const FormContainer = styled.div`
@@ -105,7 +102,6 @@ export default function LoginForm({ setIsLoggedIn }) {
     headers,
   })
     .then((response) =>{
-      console.log(response);
       // const data = response.data;
 
       const {data} = response 

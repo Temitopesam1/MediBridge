@@ -47,6 +47,8 @@ const Input = styled.input`
 const Label = styled.label`
   font-weight: bold;
   margin-top: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
 `;
 
 const Textarea = styled.textarea`
@@ -62,7 +64,7 @@ const Span = styled.span`
 `;
 
 const CheckboxContainer = styled.div`
-  margin-bottom: 4px;
+  margin-bottom: 10px;
   font-family: Arial;
 `;
 
@@ -112,6 +114,12 @@ function DoctorRegistrationForm() {
 
   const handleRegisterFormChange = (event) => {
     setRegisterForm({ ...registerForm, [event.target.name]: event.target.value });
+  };
+
+  const [showOptions, setShowOptions] = useState(false);
+
+  const handleLabelClick = () => {
+    setShowOptions(!showOptions);
   };
 
   const handleCheckboxChange = (e) => {
@@ -437,7 +445,9 @@ function DoctorRegistrationForm() {
           />
           <Span>Zulu</Span>
           </CheckboxContainer> */}
-        <Label>Areas of Expertise:</Label>
+        <Label onClick={handleLabelClick}>Areas of Expertise:</Label>
+        {showOptions && (
+          <>
         <CheckboxContainer>
           <Input
             type="checkbox"
@@ -498,6 +508,8 @@ function DoctorRegistrationForm() {
           />
           <Span>Ophthalmology</Span>
         </CheckboxContainer>
+        </>
+        )}
         {error && <Error>{error}</Error>}
         <Button type="submit">Register</Button>
       </Form>

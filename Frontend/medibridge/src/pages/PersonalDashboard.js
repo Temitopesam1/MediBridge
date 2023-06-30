@@ -1,47 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import styled from 'styled-components';
-
-const Profile = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  padding: 30px;
-`;
-
-const Card = styled.div`
-  background-color: #fff;
-  color: black;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-`;
-
-const Title = styled.h2`
-  text-align: center;
-  color: #D2691E;
-`;
-
-const PlaceholderText = styled.p`
-  color: #999;
-  font-style: italic;
-`;
+import './PersonalDashboard.css';
 
 const ProfileInformation = ({ patientInfo }) => {
   return (
-    <Card>
-      <Title>Profile Information</Title>
+    <div className="profile-container">
+      <h2 className="title">Profile Information</h2>
       {patientInfo ? (
         <>
-          <p>Name: {patientInfo.name}</p>
-          <p>Age: {patientInfo.age}</p>
-          <p>Email: {patientInfo.email}</p>
-          <p>Gender: {patientInfo.gender}</p>
+          <p className="info-item">
+            <span className="info-label">Name:</span> {patientInfo.fullName}
+          </p>
+          <p className="info-item">
+            <span className="info-label">Age:</span> {patientInfo.age}
+          </p>
+          <p className="info-item">
+            <span className="info-label">Email:</span> {patientInfo.email}
+          </p>
+          <p className="info-item">
+            <span className="info-label">Gender:</span> {patientInfo.gender}
+          </p>
+          <p className="info-item">
+            <span className="info-label">Job:</span> {patientInfo.job}
+          </p>
+          <p className="info-item">
+            <span className="info-label">Allergies:</span> {patientInfo.allergies}
+          </p>
+          <p className="info-item">
+            <span className="info-label">Surgeries:</span> {patientInfo.surgeries}
+          </p>
         </>
       ) : (
-        <PlaceholderText>No profile information available.</PlaceholderText>
+        <p className="placeholder-text">No profile information available.</p>
       )}
-    </Card>
+    </div>
   );
 };
 
@@ -60,9 +52,9 @@ const PersonalDashboard = () => {
             'Access-Token': `Bearer ${Token}`,
         },
         });
-        setPatientInfo(response.data.user);
+        setPatientInfo(response.data.userData._doc);
         console.log('This is the data',response.data.userData);
-        localStorage.setItem('userData', response.data.userData);
+        localStorage.setItem('userData', response.data._doc);
       } catch (error) {
         console.log(error);
       }
@@ -71,9 +63,7 @@ const PersonalDashboard = () => {
     fetchPatientInfo();
   }, []);
   return (
-    <Profile>
       <ProfileInformation patientInfo={patientInfo} />
-    </Profile>
   );
 };
 
