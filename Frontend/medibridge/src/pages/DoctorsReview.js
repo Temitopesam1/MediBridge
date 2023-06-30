@@ -1,28 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import StarReview from './StarReview';
-import styled from 'styled-components';
-
-
-const Review = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
+import './DoctorsReview.css';
 
 const DoctorReviews = () => {
-  const [doctors, setDoctors] = useState([]);
+  const [doctors, setDoctors] = useState([
+    { id: 1, name: 'Dr. John Doe' },
+    { id: 2, name: 'Dr. Jane Smith' },
+    { id: 3, name: 'Dr. David Johnson' },
+  ]);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [review, setReview] = useState('');
 
   useEffect(() => {
     // Fetch doctors
-    axios.get('/api/doctors')
+    axios
+      .get('/api/doctors')
       .then(response => setDoctors(response.data))
       .catch(error => console.error(error));
   }, []);
-
-
 
   const handleReviewSubmission = () => {
     if (!selectedDoctor || !review) {
@@ -30,7 +26,8 @@ const DoctorReviews = () => {
     }
 
     // Submit the review
-    axios.post('/api/reviews', { doctorId: selectedDoctor.id, review })
+    axios
+      .post('/api/reviews', { doctorId: selectedDoctor.id, review })
       .then(response => {
         // Handle successful review submission (e.g., show a success message)
         console.log('Review submitted successfully');
@@ -42,9 +39,9 @@ const DoctorReviews = () => {
   };
 
   return (
-    <Review>
+    <div className="review-container">
       <h2>Doctor Reviews</h2>
-      <select onChange={e => setSelectedDoctor(doctors.find(doctor => doctor.id === e.target.value))}>
+      <select onChange={e => setSelectedDoctor(doctors.find(doctor => doctor.id === parseInt(e.target.value)))}>
         <option value="">Select a doctor</option>
         {doctors.map(doctor => (
           <option key={doctor.id} value={doctor.id}>
@@ -59,7 +56,7 @@ const DoctorReviews = () => {
         placeholder="Write your review"
       />
       <button onClick={handleReviewSubmission}>Submit Review</button>
-    </Review>
+    </div>
   );
 };
 

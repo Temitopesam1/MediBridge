@@ -81,18 +81,7 @@ function PatientRegistrationForm() {
     homeAddress: '',
     job: '',
   });
-  const [error, setError] = useState({
-    fullName: '',
-    age:'',
-    gender: '',
-    contactNumber: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    homeAddress: '',
-    job: '',
-
-  });
+  const [error, setError] = useState('');
 
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
@@ -120,55 +109,6 @@ function PatientRegistrationForm() {
     event.preventDefault();
 
     // Validate inputs
-
-    let error = {};
-    let isValid = true;
-
-    if (!registerForm.firstName) {
-      error.firstName = "Full name is required";
-      isValid = false;
-    }
-
-    if (!registerForm.email) {
-      error.email = "Email is required";
-      isValid = false;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(registerForm.email)) {
-      error.email = "Invalid email address";
-      isValid = false;
-    }
-
-    if (!registerForm.password) {
-      error.password = "Password is required";
-      isValid = false;
-    } else if (
-      !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w\d\s:])([^\s]){8,}$/.test(
-        registerForm.password
-      )
-    ) {
-      error.password =
-        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one unique character";
-      isValid = false;
-    }
-
-    if (!registerForm.confirmPassword) {
-      error.confirmPassword = "Password is required";
-      isValid = false;
-    } else if (
-      !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w\d\s:])([^\s]){8,}$/.test(
-        registerForm.confirmPassword
-      )
-    ) {
-      error.password =
-        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one unique character";
-      isValid = false;
-    }
-    
-
-    if (registerForm.confirmPassword !== registerForm.password) {
-      error.confirmPassword = "Passwords do not match";
-      isValid = false;
-    }
-
     if (
       !registerForm.fullName ||
       !registerForm.password ||
@@ -179,20 +119,18 @@ function PatientRegistrationForm() {
       !registerForm.job ||
       !registerForm.homeAddress
     ) {
-      error = 'Please fill all fields!';
+      setError('Please fill all fields!');
       return;
     }
-    setError(error);
     // Post the form data to the backend
     axios.post('register', JSON.stringify(registerForm))
       .then((data) => {
-        if (isValid) {
+
         setSuccessMessage("Registration Successful!");
         navigate('/')
         // Reset the form
         clearForm()
         setError('');
-      }
       })
       .catch((error) => {
         setError('Error registering user.');
