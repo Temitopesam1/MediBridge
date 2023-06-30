@@ -61,7 +61,8 @@ const PersonalDashboard = () => {
         },
         });
         setPatientInfo(response.data.user);
-        console.log('This is the data',response.data.user);
+        console.log('This is the data',response.data.userData);
+        localStorage.setItem('userData', response.data.userData);
       } catch (error) {
         console.log(error);
       }

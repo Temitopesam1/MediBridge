@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Logo from '../../assets/images/newLogo.jpeg';
-import axios from '../../utils/axioss';
+import axios from '../../Utils/axioss';
 
 const FormContainer = styled.div`
   max-width: 400px;

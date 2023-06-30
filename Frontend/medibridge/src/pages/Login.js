@@ -4,7 +4,7 @@ import styled from 'styled-components';
 //import PersonalDashboard from './PersonalDashboard';
 //import { AuthContext } from '../components/Auth/AuthContext';
 import Logo from '../assets/images/newLogo.jpeg';
-import axios from '../utils/axioss';
+import axios from '../Utils/axioss';
 //import getCurrentUser from '../Utils/getCurrentUser';
 
 
@@ -97,9 +97,9 @@ export default function LoginForm({ setIsLoggedIn }) {
   const userValues = `${loginForm.email}:${loginForm.password}`;
   const encoded = btoa(userValues);
   const headers= {
-      'Content-Type': 'application/json',
-      'Authorization': `Basic ${encoded}`,
-    }
+    'Content-Type': 'application/json',
+    'Authorization': `Basic ${encoded}`,
+  }
   // Post the form data to the backend
   axios.get('login', {
     headers,
@@ -109,8 +109,7 @@ export default function LoginForm({ setIsLoggedIn }) {
       // const data = response.data;
 
       const {data} = response 
-      const axiosToken = data.accessToken;
-      localStorage.setItem('token', axiosToken);
+      localStorage.setItem('token', data.accessToken);
 
       // localStorage.setItem("currentUser", JSON.stringify(res.data));
       // Reset the form

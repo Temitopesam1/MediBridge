@@ -10,6 +10,13 @@ const FormContainer = styled.div`
   border-radius: 5px;
 `;
 
+const Select = styled.select`
+  padding: 10px;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
 const LogoContainer = styled.div`
   display: flex;
   align-items: center;
@@ -98,7 +105,8 @@ function DoctorRegistrationForm() {
     gender: '',
     homeAddress: '',
     department: '',
-    areasOfExpertise: []
+    areasOfExpertise: [],
+    provider: true
   });
   const [error, setError] = useState('');
 
@@ -167,7 +175,6 @@ function DoctorRegistrationForm() {
           homeAddress: '',
           department: '',
           areasOfExpertise: [],
-          provider: true
         });
         setError('');
       })
@@ -189,6 +196,15 @@ function DoctorRegistrationForm() {
             name="fullName"
             value={registerForm.fullName}
             placeholder='Full Name'
+            onChange={handleRegisterFormChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Input
+            type="number"
+            name="age"
+            value={registerForm.age}
+            placeholder='Age'
             onChange={handleRegisterFormChange}
           />
         </FormGroup>
@@ -228,24 +244,6 @@ function DoctorRegistrationForm() {
           onChange={handleRegisterFormChange}
         />
         </FormGroup>
-        {/* <FormGroup>
-        <Input
-          type="text"
-          name="affiliation"
-          placeholder="Hospital/Clinic Affiliation"
-          value={registerForm.affiliation}
-          onChange={handleRegisterFormChange}
-        />
-        </FormGroup>
-        <FormGroup>
-        <Input
-          type="text"
-          name="experience"
-          placeholder="Years of Experience"
-          value={registerForm.experience}
-          onChange={handleRegisterFormChange}
-        />
-        </FormGroup> */}
         <FormGroup>
         <Input
           type="text"
@@ -291,6 +289,40 @@ function DoctorRegistrationForm() {
           onChange={handleRegisterFormChange}
         />
         </FormGroup> */}
+        <FormGroup>
+          <Input
+            type="number"
+            name="charges"
+            value={registerForm.charges}
+            placeholder='Charge Per session'
+            onChange={handleRegisterFormChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Input
+            type="text"
+            name="department"
+            value={registerForm.department}
+            placeholder='Department'
+            onChange={handleRegisterFormChange}
+          />
+        </FormGroup>
+        <FormGroup>
+        <Textarea
+          name="homeAddress"
+          placeholder="Home Address"
+          value={registerForm.homeAddress}
+          onChange={handleRegisterFormChange}
+        ></Textarea>
+        </FormGroup>
+        <FormGroup>
+          <Select name="gender" value={registerForm.gender} onChange={handleRegisterFormChange}>
+            <option value="">Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </Select>
+        </FormGroup>
         <FormGroup>
         <Textarea
           name="education"
