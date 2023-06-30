@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../Utils/axioss';
 import StarReview from './StarReview';
 import './DoctorsReview.css';
 
@@ -15,7 +15,7 @@ const DoctorReviews = () => {
   useEffect(() => {
     // Fetch doctors
     axios
-      .get('/api/doctors')
+      .get('doctors')
       .then(response => setDoctors(response.data))
       .catch(error => console.error(error));
   }, []);
@@ -27,7 +27,7 @@ const DoctorReviews = () => {
 
     // Submit the review
     axios
-      .post('/api/reviews', { doctorId: selectedDoctor.id, review })
+      .post('reviews', { doctorId: selectedDoctor.id, review })
       .then(response => {
         // Handle successful review submission (e.g., show a success message)
         console.log('Review submitted successfully');
