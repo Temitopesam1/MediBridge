@@ -1,0 +1,76 @@
+.about-us-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 60px;
+}
+
+.section-image {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  margin-right: 40px;
+  object-fit: cover;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.section-content {
+  flex-grow: 1;
+}
+
+h1 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+
+.contact-section {
+  padding: 40px;
+  border-radius: 10px;
+}
+
+.contact-section h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.contact-section p {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.contact-section ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.contact-section li {
+  margin-bottom: 10px;
+}
+
+.contact-section li:before {
+  content: '\2023';
+  color: #ff5252;
+  display: inline-block;
+  width: 1em;
+  margin-right: -1.8em;
+}
+
+@import '~@fortawesome/fontawesome-free/css/all.css';

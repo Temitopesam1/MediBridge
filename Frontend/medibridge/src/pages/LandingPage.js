@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-//import BackgroundImage from '../assets/images/MedicalBackground.jpg';
+import Header from '../components/Header';
 import heroImage from '../assets/images/hero-image.jpg';
 import feature1 from '../assets/images/feature-1 (1).jpg';
 import feature2 from '../assets/images/feature-2.jpg';
@@ -16,6 +16,7 @@ const LandingPage = () => {
 
   return (
     <Container>
+      <Header />
       <Hero>
         <HeroText>
           <Title>Transforming Healthcare</Title>
@@ -25,6 +26,7 @@ const LandingPage = () => {
         <HeroImage src={heroImage} alt='Hero Image' />
       </Hero>
       <Features>
+        <h3>What we offer:</h3>
         <Feature>
           <FeatureIcon src={feature1} alt="Feature 1" />
           <FeatureTitle>Convenient Access</FeatureTitle>
@@ -105,7 +107,7 @@ const HeroImage = styled.img`
 
 const Features = styled.section`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 40px;
   margin-bottom: 80px;
 `;

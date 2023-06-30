@@ -1,0 +1,51 @@
+.articles-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.article-card {
+  margin-bottom: 40px;
+}
+
+.article-card img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.article-card h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.article-card h2 a {
+  color: #333;
+  text-decoration: none;
+}
+
+.article-card h2 a:hover {
+  text-decoration: underline;
+}
+
+.article-card p {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.article-card strong {
+  font-weight: bold;
+}
+
+.article-card hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
